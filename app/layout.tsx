@@ -27,6 +27,16 @@ export default function RootLayout({
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+
+      <header>
+  <a href="/">ELPS-J</a>
+
+  <nav>
+    <a href="/">ホーム</a>
+    <a href="/segmental">分節音</a>
+    <a href="/AssociativePhase">発音練習</a>
+  </nav>
+</header>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
