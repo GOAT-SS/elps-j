@@ -18,26 +18,25 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children,}: Readonly<{children: React.ReactNode}>) {
   return (
     <html
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <body className="min-h-full flex flex-col">
+        <header>
+          <a href="/">ELPS-J</a>
 
-      <header>
-  <a href="/">ELPS-J</a>
+          <nav>
+            <a href="/">ホーム</a>
+            <a href="/segmental">分節音</a>
+            <a href="/AssociativePhase">発音練習</a>
+          </nav>
+        </header>
 
-  <nav>
-    <a href="/">ホーム</a>
-    <a href="/segmental">分節音</a>
-    <a href="/AssociativePhase">発音練習</a>
-  </nav>
-</header>
-      <body className="min-h-full flex flex-col">{children}</body>
+        {children}
+      </body>
     </html>
-  );
+  )
 }

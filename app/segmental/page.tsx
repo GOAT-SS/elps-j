@@ -1,3 +1,5 @@
+import Recorder from './Recorder'
+
 export default function Home() {
   return (
     <main>
@@ -5,6 +7,7 @@ export default function Home() {
         <div>
           <h1 className="text-3xl font-bold text-blue-500">English Pronunciation Learning System For Japanese Learners
           </h1>
+          <Recorder />
           <button>
             aaaa
           </button>
