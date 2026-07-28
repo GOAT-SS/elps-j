@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "candidateVowels": [
+    "æ",
+    "ʌ",
+    "ɑ"
+  ],
+  "repetitionsPerWord": 3,
+  "scoreMargin": {
+    "minimumForClearResult": 15,
+    "status": "provisional",
+    "note": "録音データを蓄積してから妥当な値へ調整する暫定基準"
+  },
+  "notes": [
+    "母音や単語を追加するときは、候補母音と同じ子音骨格を持つ行を追加します。",
+    "追加する音素と単語は教材設計と方言を確認してから決定します。"
+  ],
+  "rows": [
+    [
+      {
+        "word": "cap",
+        "expected_ipa": "kæp",
+        "target_vowel": "æ"
+      },
+      {
+        "word": "cup",
+        "expected_ipa": "kʌp",
+        "target_vowel": "ʌ"
+      },
+      {
+        "word": "cop",
+        "expected_ipa": "kɑp",
+        "target_vowel": "ɑ"
+      }
+    ],
+    [
+      {
+        "word": "hat",
+        "expected_ipa": "hæt",
+        "target_vowel": "æ"
+      },
+      {
+        "word": "hut",
+        "expected_ipa": "hʌt",
+        "target_vowel": "ʌ"
+      },
+      {
+        "word": "hot",
+        "expected_ipa": "hɑt",
+        "target_vowel": "ɑ"
+      }
+    ],
+    [
+      {
+        "word": "stack",
+        "expected_ipa": "stæk",
+        "target_vowel": "æ"
+      },
+      {
+        "word": "stuck",
+        "expected_ipa": "stʌk",
+        "target_vowel": "ʌ"
+      },
+      {
+        "word": "stock",
+        "expected_ipa": "stɑk",
+        "target_vowel": "ɑ"
+      }
+    ]
+  ]
+}

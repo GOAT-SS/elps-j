@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "title": "IPA構成要素一覧（英語主要音素）",
+  "language": "en",
+  "source": {
+    "filename": "IPA_構成要素一覧.pdf",
+    "valueNormalization": "PDF内の英語表記を小文字のsnake_caseへ正規化"
+  },
+  "notes": [
+    "このファイルは発音記号から構成要素を参照するための静的辞書です。",
+    "PDF由来の音素とアプリ用追加音素はentrySourceで区別します。",
+    "方言によって音素体系や分類が異なるため、将来はdialect別の辞書へ分割できます。",
+    "TODO: 各発音記号の構成要素が妥当かを今後再検証し、必要に応じて値を変更します。"
+  ],
+  "phonemes": {
+    "iː": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "high",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "tense"
+      }
+    },
+    "ɪ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "high",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    "e": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "tense"
+      }
+    },
+    "ɛ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    "æ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "low",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    "ə": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "central",
+        "rounding": "unrounded",
+        "tenseness": "neutral"
+      }
+    },
+    "ʌ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "central",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    "ɜː": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "central",
+        "rounding": "unrounded",
+        "tenseness": "tense"
+      }
+    },
+    "uː": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "high",
+        "backness": "back",
+        "rounding": "rounded",
+        "tenseness": "tense"
+      }
+    },
+    "ʊ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "high",
+        "backness": "back",
+        "rounding": "rounded",
+        "tenseness": "lax"
+      }
+    },
+    "ɔː": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "mid",
+        "backness": "back",
+        "rounding": "rounded",
+        "tenseness": "tense"
+      }
+    },
+    "ɑː": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "low",
+        "backness": "back",
+        "rounding": "unrounded",
+        "tenseness": "tense"
+      }
+    },
+    "ɒ": {
+      "category": "monophthong",
+      "entrySource": "pdf",
+      "features": {
+        "height": "low",
+        "backness": "back",
+        "rounding": "rounded",
+        "tenseness": "lax"
+      }
+    },
+    "ɑ": {
+      "category": "monophthong",
+      "entrySource": "application_extension",
+      "derivedFrom": "ɑː",
+      "dialects": [
+        "general_american"
+      ],
+      "features": {
+        "height": "low",
+        "backness": "back",
+        "rounding": "unrounded",
+        "tenseness": "unspecified"
+      },
+      "note": "現在のアプリと音声モデルが使用する長さ記号なしの表記"
+    },
+    "eɪ": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "mid",
+          "backness": "front"
+        },
+        "endPosition": {
+          "height": "high",
+          "backness": "front"
+        }
+      }
+    },
+    "aɪ": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "low",
+          "backness": "front"
+        },
+        "endPosition": {
+          "height": "high",
+          "backness": "front"
+        }
+      }
+    },
+    "ɔɪ": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "mid",
+          "backness": "back",
+          "rounding": "rounded"
+        },
+        "endPosition": {
+          "height": "high",
+          "backness": "front"
+        }
+      }
+    },
+    "aʊ": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "low",
+          "backness": "central"
+        },
+        "endPosition": {
+          "height": "high",
+          "backness": "back"
+        }
+      }
+    },
+    "oʊ": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "mid",
+          "backness": "back",
+          "rounding": "rounded"
+        },
+        "endPosition": {
+          "height": "high",
+          "backness": "back"
+        }
+      }
+    },
+    "ɪə": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "high",
+          "backness": "front"
+        },
+        "endPosition": {
+          "backness": "central"
+        }
+      }
+    },
+    "eə": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "mid",
+          "backness": "front"
+        },
+        "endPosition": {
+          "backness": "central"
+        }
+      }
+    },
+    "ʊə": {
+      "category": "diphthong",
+      "entrySource": "pdf",
+      "features": {
+        "startPosition": {
+          "height": "high",
+          "backness": "back"
+        },
+        "endPosition": {
+          "backness": "central"
+        }
+      }
+    },
+    "p": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "bilabial",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    "b": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "bilabial",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    "t": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    "d": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    "k": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "velar",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    "g": {
+      "category": "stop",
+      "entrySource": "pdf",
+      "features": {
+        "place": "velar",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    "f": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "labiodental",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    "v": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "labiodental",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    "θ": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "dental",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    "ð": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "dental",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    "s": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    "z": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    "ʃ": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "postalveolar",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    "ʒ": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "postalveolar",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    "h": {
+      "category": "fricative",
+      "entrySource": "pdf",
+      "features": {
+        "place": "glottal",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    "tʃ": {
+      "category": "affricate",
+      "entrySource": "pdf",
+      "features": {
+        "place": "postalveolar",
+        "manner": "affricate",
+        "voicing": "voiceless"
+      }
+    },
+    "dʒ": {
+      "category": "affricate",
+      "entrySource": "pdf",
+      "features": {
+        "place": "postalveolar",
+        "manner": "affricate",
+        "voicing": "voiced"
+      }
+    },
+    "m": {
+      "category": "nasal",
+      "entrySource": "pdf",
+      "features": {
+        "place": "bilabial",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    "n": {
+      "category": "nasal",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    "ŋ": {
+      "category": "nasal",
+      "entrySource": "pdf",
+      "features": {
+        "place": "velar",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    "r": {
+      "category": "approximant",
+      "entrySource": "pdf",
+      "features": {
+        "place": "postalveolar",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    },
+    "j": {
+      "category": "approximant",
+      "entrySource": "pdf",
+      "features": {
+        "place": "palatal",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    },
+    "w": {
+      "category": "approximant",
+      "entrySource": "pdf",
+      "features": {
+        "place": "labio_velar",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    },
+    "l": {
+      "category": "lateral",
+      "entrySource": "pdf",
+      "features": {
+        "place": "alveolar",
+        "manner": "lateral_approximant",
+        "voicing": "voiced"
+      }
+    }
+  }
+}

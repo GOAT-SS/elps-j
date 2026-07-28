@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --font-japanese: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN",
+    "Hiragino Mincho Pro", "Noto Serif CJK JP", "Noto Serif JP", serif;
+  --font-english: "Times New Roman", Times, "Nimbus Roman No9 L", serif;
+  --font-code: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --background: #020617;
+  --foreground: #f8fafc;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-japanese);
+  --font-mono: var(--font-code);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-japanese);
+  margin: 0;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:lang(en) {
+  font-family: var(--font-english);
+}
+
+pre,
+code {
+  font-family: var(--font-code);
+}
+
+.theme-dark-only {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-light-only {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-dark-only {
+  display: inline;
+}
+
+:root[data-theme="dark"] .bg-slate-50 {
+  background-color: #020617;
+}
+
+:root[data-theme="dark"] .bg-white,
+:root[data-theme="dark"] .bg-white\/80 {
+  background-color: #0f172a;
+}
+
+:root[data-theme="dark"] .bg-blue-50 {
+  background-color: #0c1e3f;
+}
+
+:root[data-theme="dark"] .bg-emerald-50 {
+  background-color: #052e2b;
+}
+
+:root[data-theme="dark"] .bg-violet-50 {
+  background-color: #211a3c;
+}
+
+:root[data-theme="dark"] .bg-amber-50 {
+  background-color: #2a1f08;
+}
+
+:root[data-theme="dark"] .bg-red-50 {
+  background-color: #3b1016;
+}
+
+:root[data-theme="dark"] .bg-gray-50,
+:root[data-theme="dark"] .bg-slate-100 {
+  background-color: #1e293b;
+}
+
+:root[data-theme="dark"] .bg-gray-200,
+:root[data-theme="dark"] .bg-slate-300 {
+  background-color: #334155;
+}
+
+:root[data-theme="dark"] .bg-gradient-to-br {
+  background-image: linear-gradient(
+    to bottom right,
+    #020617,
+    #0f172a,
+    #172554
+  );
+}
+
+:root[data-theme="dark"] .bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, #0c1e3f, #321927);
+}
+
+:root[data-theme="dark"] .text-slate-950,
+:root[data-theme="dark"] .text-gray-900 {
+  color: #f8fafc;
+}
+
+:root[data-theme="dark"] .text-slate-900 {
+  color: #f1f5f9;
+}
+
+:root[data-theme="dark"] .text-slate-800 {
+  color: #e2e8f0;
+}
+
+:root[data-theme="dark"] .text-slate-700,
+:root[data-theme="dark"] .text-slate-600,
+:root[data-theme="dark"] .text-gray-700 {
+  color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .text-slate-500,
+:root[data-theme="dark"] .text-gray-600 {
+  color: #94a3b8;
+}
+
+:root[data-theme="dark"] .text-slate-300 {
+  color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .text-blue-700,
+:root[data-theme="dark"] .text-blue-600 {
+  color: #93c5fd;
+}
+
+:root[data-theme="dark"] .text-emerald-700,
+:root[data-theme="dark"] .text-emerald-900,
+:root[data-theme="dark"] .text-emerald-950 {
+  color: #6ee7b7;
+}
+
+:root[data-theme="dark"] .text-violet-700 {
+  color: #c4b5fd;
+}
+
+:root[data-theme="dark"] .text-amber-900,
+:root[data-theme="dark"] .text-amber-950 {
+  color: #fde68a;
+}
+
+:root[data-theme="dark"] .text-red-700,
+:root[data-theme="dark"] .text-red-900 {
+  color: #fca5a5;
+}
+
+:root[data-theme="dark"] .text-green-700 {
+  color: #86efac;
+}
+
+:root[data-theme="dark"] .border-slate-200,
+:root[data-theme="dark"] .border-gray-200,
+:root[data-theme="dark"] .border-blue-100,
+:root[data-theme="dark"] .border-emerald-100,
+:root[data-theme="dark"] .border-violet-100,
+:root[data-theme="dark"] .border-white\/80 {
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .border-slate-300,
+:root[data-theme="dark"] .border-gray-300,
+:root[data-theme="dark"] .border-gray-400 {
+  border-color: #475569;
+}
+
+:root[data-theme="dark"] .border-blue-200 {
+  border-color: #1e40af;
+}
+
+:root[data-theme="dark"] .border-amber-200 {
+  border-color: #78350f;
 }
