@@ -72,9 +72,6 @@ const PRACTICE_WORD_ROWS: PracticeWord[][] = practiceConfig.rows.map(
 const CANDIDATE_VOWELS = practiceConfig.candidateVowels
 const REPETITIONS_PER_WORD = practiceConfig.repetitionsPerWord
 const HISTORY_STORAGE_KEY = 'elps-j:pronunciation-history:v1'
-const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:8000'
-).replace(/\/$/, '')
 
 const COMPONENT_LABELS: Record<string, string> = {
   height: '舌の高さ',
@@ -243,13 +240,10 @@ export default function Recorder() {
       formData.append('target_word', selectedWord.word)
       // WebM は効率が良いらしいMP4とかと比べて効率が段違いらしい．a
 
-      const response = await fetch(
-        `${API_BASE_URL}/analyze-pronunciation`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      )
+      const response = await fetch('/api/analyze-pronunciation', {
+        method: 'POST',
+        body: formData,
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)

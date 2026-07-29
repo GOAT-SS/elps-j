@@ -1,7 +1,9 @@
-from fastapi import FastAPI, UploadFile, File,Form,HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import json
+import os
+import secrets
 import subprocess
 import tempfile
 import wave
@@ -12,6 +14,14 @@ from transformers import AutoModelForCTC, AutoProcessor
 
 
 MODEL_ID="KoelLabs/xlsr-english-01"
+API_KEY = os.environ.get("PRONUNCIATION_API_KEY")
+MAX_UPLOAD_BYTES = 4_000_000
+
+if not API_KEY:
+    raise RuntimeError(
+        "PRONUNCIATION_API_KEY environment variable is required"
+    )
+
 IPA_FEATURES_PATH = (
     Path(__file__).parent
     / "data"
@@ -244,11 +254,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "device": str(DEVICE),
+    }
+
+
 @app.post("/analyze-pronunciation")
 async def analyze_pronunciation(
     file: UploadFile = File(...),
-    target_word: str = Form (...),
+    target_word: str = Form(...),
+    provided_api_key: str | None = Header(
+        default=None,
+        alias="X-Pronunciation-Api-Key",
+    ),
 ):
+    if (
+        provided_api_key is None
+        or not secrets.compare_digest(provided_api_key, API_KEY)
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized",
+        )
+
     normalized_target_word = target_word.strip().lower()
     practice_word = PRACTICE_WORDS.get(normalized_target_word)
 
@@ -259,6 +290,12 @@ async def analyze_pronunciation(
         )
 
     contents = await file.read()
+
+    if len(contents) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail="Audio file is too large",
+        )
 
     with tempfile.TemporaryDirectory() as temp_directory:
         temp_path = Path(temp_directory)
