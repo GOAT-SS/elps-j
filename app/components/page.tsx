@@ -5,7 +5,7 @@ export default function ComponentsPage() {
   return (
     <main className="flex-1">
       <section className="border-b border-emerald-100 bg-emerald-50">
-        <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+        <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
           <p
             lang="en"
             className="text-sm font-bold tracking-[0.14em] text-emerald-700"
@@ -22,10 +22,10 @@ export default function ComponentsPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_0.38fr]">
+      <section className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8">
         <ComponentBuilder />
 
-        <aside className="space-y-5">
+        <aside className="mt-8 grid gap-5 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-bold text-emerald-700">
               この学習方法について
