@@ -123,17 +123,25 @@ function csvCell(value: unknown) {
   return `"${text.replaceAll('"', '""')}"`
 }
 
-export default function Recorder() {
+export default function Recorder({
+  initialVowel,
+}: {
+  initialVowel?: string
+}) {
   const recorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
+
+  const initialWord = (
+    PRACTICE_WORD_ROWS.flat().find(
+      (practiceWord) => practiceWord.vowel === initialVowel,
+    ) ?? PRACTICE_WORD_ROWS[0][0]
+  )
 
   const [status, setStatus] = useState<Status>('idle')
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [history, setHistory] = useState<HistoryEntry[]>([])
-  const [selectedWord, setSelectedWord] = useState<PracticeWord>(
-    PRACTICE_WORD_ROWS[0][0],
-  )
+  const [selectedWord, setSelectedWord] = useState<PracticeWord>(initialWord)
 
   const isBusy = status === 'recording' || status === 'uploading'
   const recordingButtonLabel = status === 'recording'

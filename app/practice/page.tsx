@@ -1,6 +1,22 @@
 import Recorder from './Recorder'
 
-export default function PracticePage() {
+type PracticePageProps = {
+  searchParams: Promise<{
+    vowel?: string | string[]
+  }>
+}
+
+const supportedVowels = new Set(['æ', 'ʌ', 'ɑ'])
+
+export default async function PracticePage({ searchParams }: PracticePageProps) {
+  const requestedVowel = (await searchParams).vowel
+  const initialVowel = (
+    typeof requestedVowel === 'string'
+    && supportedVowels.has(requestedVowel)
+  )
+    ? requestedVowel
+    : undefined
+
   return (
     <main className="flex-1">
       <section className="border-b border-violet-100 bg-violet-50">
@@ -26,7 +42,7 @@ export default function PracticePage() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
-        <Recorder />
+        <Recorder initialVowel={initialVowel} />
       </section>
     </main>
   )

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import ipaData from "../backend/data/ipa_features.json";
 import practiceConfig from "../data/practice_words.json";
@@ -214,14 +215,24 @@ export default function ComponentBuilder() {
           <p className="mt-2 text-sm leading-6">
             比較のポイント：{vowelGuides[targetVowel].comparison}
           </p>
-          {isAllCorrect && !hasCompletedAll ? (
-            <button
-              type="button"
-              onClick={showNextTarget}
-              className="mt-4 rounded-full bg-slate-950 px-5 py-2.5 font-bold text-white transition hover:bg-slate-800"
-            >
-              未完了の発音記号へ
-            </button>
+          {isAllCorrect ? (
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                href={`/practice?vowel=${encodeURIComponent(targetVowel)}`}
+                className="rounded-full bg-violet-700 px-5 py-2.5 font-bold text-white transition hover:bg-violet-800"
+              >
+                /{targetVowel}/ を発音練習する
+              </Link>
+              {!hasCompletedAll ? (
+                <button
+                  type="button"
+                  onClick={showNextTarget}
+                  className="rounded-full bg-slate-950 px-5 py-2.5 font-bold text-white transition hover:bg-slate-800"
+                >
+                  未完了の発音記号へ
+                </button>
+              ) : null}
+            </div>
           ) : null}
         </div>
       )}
