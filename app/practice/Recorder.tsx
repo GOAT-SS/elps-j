@@ -1,6 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import {
+  soundGroups,
+  soundLessons,
+  type SoundGroup,
+} from '../data/american-english'
 import practiceConfig from '../data/practice_words.json'
 
 type Status = 'idle' | 'recording' | 'uploading' | 'done' | 'error'
@@ -51,10 +56,23 @@ type AnalysisResult = {
   vowelComponentAnalysis: VowelComponentAnalysis | null
 }
 
+type PhonemeResponse = {
+  phonemes: string | string[]
+}
+
 type PracticeWord = {
   word: string
   ipa: string
-  vowel: string
+  soundSlug: string
+  symbol: string
+}
+
+type PracticeSound = {
+  slug: string
+  symbol: string
+  group: SoundGroup
+  name: string
+  examples: PracticeWord[]
 }
 
 type HistoryEntry = AnalysisResult & {
@@ -62,15 +80,18 @@ type HistoryEntry = AnalysisResult & {
   recordedAt: string
 }
 
-const PRACTICE_WORD_ROWS: PracticeWord[][] = practiceConfig.rows.map(
-  (row) => row.map((practiceWord) => ({
-    word: practiceWord.word,
-    ipa: practiceWord.expected_ipa,
-    vowel: practiceWord.target_vowel,
+const PRACTICE_SOUNDS: PracticeSound[] = soundLessons.map((sound) => ({
+  slug: sound.slug,
+  symbol: sound.symbol,
+  group: sound.group,
+  name: sound.name,
+  examples: sound.examples.map((example) => ({
+    ...example,
+    soundSlug: sound.slug,
+    symbol: sound.symbol,
   })),
-)
+}))
 const CANDIDATE_VOWELS = practiceConfig.candidateVowels
-const REPETITIONS_PER_WORD = practiceConfig.repetitionsPerWord
 const HISTORY_STORAGE_KEY = 'elps-j:pronunciation-history:v1'
 
 const COMPONENT_LABELS: Record<string, string> = {
@@ -123,22 +144,141 @@ function csvCell(value: unknown) {
   return `"${text.replaceAll('"', '""')}"`
 }
 
+function formatNumber(value: unknown, digits = 2) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? value.toFixed(digits)
+    : 'データなし'
+}
+
+function normalizedPercentage(value: unknown) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return 0
+  }
+
+  return Math.min(100, Math.max(0, value))
+}
+
+function isPhonemeResponse(value: unknown): value is PhonemeResponse {
+  if (typeof value !== 'object' || value === null || !('phonemes' in value)) {
+    return false
+  }
+
+  const { phonemes } = value
+  return (
+    typeof phonemes === 'string'
+    || (
+      Array.isArray(phonemes)
+      && phonemes.every((phoneme) => typeof phoneme === 'string')
+    )
+  )
+}
+
+function responseErrorMessage(value: unknown, status: number) {
+  if (typeof value === 'object' && value !== null) {
+    if ('error' in value && typeof value.error === 'string') {
+      return value.error
+    }
+
+    if ('detail' in value && typeof value.detail === 'string') {
+      return value.detail
+    }
+  }
+
+  return `発音判定APIからHTTP ${status}が返されました。`
+}
+
+function encodePcmWav(samples: Float32Array, sampleRate: number) {
+  const bytesPerSample = 2
+  const buffer = new ArrayBuffer(44 + samples.length * bytesPerSample)
+  const view = new DataView(buffer)
+
+  const writeText = (offset: number, text: string) => {
+    for (let index = 0; index < text.length; index += 1) {
+      view.setUint8(offset + index, text.charCodeAt(index))
+    }
+  }
+
+  writeText(0, 'RIFF')
+  view.setUint32(4, buffer.byteLength - 8, true)
+  writeText(8, 'WAVE')
+  writeText(12, 'fmt ')
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
+  view.setUint16(22, 1, true)
+  view.setUint32(24, sampleRate, true)
+  view.setUint32(28, sampleRate * bytesPerSample, true)
+  view.setUint16(32, bytesPerSample, true)
+  view.setUint16(34, 16, true)
+  writeText(36, 'data')
+  view.setUint32(40, samples.length * bytesPerSample, true)
+
+  samples.forEach((sample, index) => {
+    const normalizedSample = Math.max(-1, Math.min(1, sample))
+    const integerSample = normalizedSample < 0
+      ? normalizedSample * 0x8000
+      : normalizedSample * 0x7fff
+
+    view.setInt16(44 + index * bytesPerSample, integerSample, true)
+  })
+
+  return new Blob([buffer], { type: 'audio/wav' })
+}
+
+async function convertToWav(audioBlob: Blob) {
+  const targetSampleRate = 16_000
+  const audioContext = new AudioContext()
+
+  try {
+    const decodedAudio = await audioContext.decodeAudioData(
+      await audioBlob.arrayBuffer(),
+    )
+    const frameCount = Math.max(
+      1,
+      Math.ceil(decodedAudio.duration * targetSampleRate),
+    )
+    const offlineContext = new OfflineAudioContext(
+      1,
+      frameCount,
+      targetSampleRate,
+    )
+    const source = offlineContext.createBufferSource()
+
+    source.buffer = decodedAudio
+    source.connect(offlineContext.destination)
+    source.start()
+
+    const renderedAudio = await offlineContext.startRendering()
+    return encodePcmWav(
+      renderedAudio.getChannelData(0),
+      targetSampleRate,
+    )
+  } finally {
+    await audioContext.close()
+  }
+}
+
 export default function Recorder({
-  initialVowel,
+  initialSoundSlug,
 }: {
-  initialVowel?: string
+  initialSoundSlug?: string
 }) {
   const recorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
 
-  const initialWord = (
-    PRACTICE_WORD_ROWS.flat().find(
-      (practiceWord) => practiceWord.vowel === initialVowel,
-    ) ?? PRACTICE_WORD_ROWS[0][0]
+  const initialSound = (
+    PRACTICE_SOUNDS.find((sound) => sound.slug === initialSoundSlug)
+    ?? PRACTICE_SOUNDS[0]
   )
+  const initialWord = initialSound.examples[0]
 
+  const [selectedGroup, setSelectedGroup] = useState<SoundGroup>(
+    initialSound.group,
+  )
+  const [selectedSound, setSelectedSound] = useState<PracticeSound>(initialSound)
   const [status, setStatus] = useState<Status>('idle')
   const [result, setResult] = useState<AnalysisResult | null>(null)
+  const [phonemeResult, setPhonemeResult] = useState<PhonemeResponse | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [selectedWord, setSelectedWord] = useState<PracticeWord>(initialWord)
@@ -161,13 +301,19 @@ export default function Recorder({
     done: '判定完了',
     error: 'エラーが発生しました',
   }[status]
-  const statusDescription = {
+  const defaultStatusDescription = {
     idle: 'ボタンを押してから、選択した単語を発音してください。',
     recording: '発音が終わったら、赤い停止ボタンを押してください。',
     uploading: '音声を解析しています。そのままお待ちください。',
     done: 'もう一度練習するときは、録音開始ボタンを押してください。',
     error: 'マイクとバックエンドの接続を確認して、もう一度お試しください。',
   }[status]
+  const statusDescription = status === 'error' && errorMessage !== null
+    ? errorMessage
+    : defaultStatusDescription
+  const visibleSounds = PRACTICE_SOUNDS.filter(
+    (sound) => sound.group === selectedGroup,
+  )
 
   useEffect(() => {
     return () => {
@@ -206,6 +352,8 @@ export default function Recorder({
       const recorder = new MediaRecorder(stream)
       chunksRef.current = []
       setResult(null)
+      setPhonemeResult(null)
+      setErrorMessage(null)
       setAudioUrl(null)
 
       recorder.ondataavailable = (event) => {
@@ -229,6 +377,7 @@ export default function Recorder({
       setStatus('recording')
     } catch (error) {
       console.error(error)
+      setErrorMessage('マイクを利用できませんでした。ブラウザーの権限を確認してください。')
       setStatus('error')
     }
   }
@@ -238,15 +387,37 @@ export default function Recorder({
     setStatus('uploading')
   }
 
-  async function uploadAudio(audioBlob: Blob) {
-    //音声処理とかは特にTryCathch使った方が良い．プログラムが動いているときに，録音が止まった後に，サーバーが落ちているとか，ネットワークが切れているとか，そういうことが起こる可能性がある．a
-    //Nullぽ　a
+  function resetRecordingResult() {
+    setResult(null)
+    setPhonemeResult(null)
+    setErrorMessage(null)
+    setAudioUrl(null)
+    setStatus('idle')
+  }
 
+  function selectSound(sound: PracticeSound) {
+    setSelectedSound(sound)
+    setSelectedWord(sound.examples[0])
+    resetRecordingResult()
+  }
+
+  function selectGroup(group: SoundGroup) {
+    const firstSound = PRACTICE_SOUNDS.find((sound) => sound.group === group)
+
+    if (firstSound === undefined) {
+      return
+    }
+
+    setSelectedGroup(group)
+    selectSound(firstSound)
+  }
+
+  async function uploadAudio(audioBlob: Blob) {
     try {
+      const wavBlob = await convertToWav(audioBlob)
       const formData = new FormData()
-      formData.append('file', audioBlob, 'recording.webm')
+      formData.append('file', wavBlob, 'recording.wav')
       formData.append('target_word', selectedWord.word)
-      // WebM は効率が良いらしいMP4とかと比べて効率が段違いらしい．a
 
       const response = await fetch('/api/analyze-pronunciation', {
         method: 'POST',
@@ -254,10 +425,28 @@ export default function Recorder({
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+        const errorBody: unknown = await response.json().catch(() => null)
+        throw new Error(responseErrorMessage(errorBody, response.status))
       }
 
-      const analysisResult = (await response.json()) as AnalysisResult
+      const responseBody: unknown = await response.json()
+
+      if (isPhonemeResponse(responseBody)) {
+        setPhonemeResult(responseBody)
+        setResult(null)
+        setStatus('done')
+        return
+      }
+
+      const analysisResult = responseBody as AnalysisResult
+
+      if (
+        typeof analysisResult !== 'object'
+        || analysisResult === null
+        || typeof analysisResult.observedIPA !== 'string'
+      ) {
+        throw new Error('発音判定APIのレスポンス形式が想定と異なります。')
+      }
       const historyEntry: HistoryEntry = {
         ...analysisResult,
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
@@ -282,6 +471,11 @@ export default function Recorder({
       setStatus('done')
     } catch (error) {
       console.error(error)
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : '発音判定中に不明なエラーが発生しました。',
+      )
       setStatus('error')
     }
   }
@@ -350,68 +544,107 @@ export default function Recorder({
 
   return (
     <section>
-      <fieldset className="mb-6 max-w-xl" disabled={isBusy}>
+      <fieldset className="mb-8" disabled={isBusy}>
         <legend className="mb-3 text-lg font-bold">
-          練習する単語を選択
+          練習する発音記号と単語を選択
         </legend>
 
         <div
-          className="grid gap-2"
-          style={{
-            gridTemplateColumns: `repeat(${CANDIDATE_VOWELS.length}, minmax(0, 1fr))`,
-          }}
+          className="flex overflow-x-auto border-b border-slate-200"
+          role="tablist"
+          aria-label="発音記号の分類"
         >
-          {CANDIDATE_VOWELS.map((vowel) => (
-            <div
-              key={vowel}
-              className="text-center font-semibold"
-            >
-              <span lang="en">/{vowel}/</span>
-            </div>
-          ))}
-
-          {PRACTICE_WORD_ROWS.flat().map((practiceWord) => {
-            const isSelected = selectedWord.word === practiceWord.word
-            const completedAttempts = history.filter(
-              (entry) => (
-                entry.targetWord === practiceWord.word
-                && entry.scoreConfidenceStatus === 'clear'
-              ),
-            ).length
+          {soundGroups.map((group) => {
+            const isSelected = selectedGroup === group.id
 
             return (
               <button
-                key={practiceWord.word}
+                key={group.id}
                 type="button"
-                aria-pressed={isSelected}
-                onClick={() => {
-                  setSelectedWord(practiceWord)
-                  setResult(null)
-                  setAudioUrl(null)
-                  setStatus('idle')
-                }}
+                role="tab"
+                aria-selected={isSelected}
+                onClick={() => selectGroup(group.id)}
                 className={[
-                  'rounded-lg border px-3 py-3 text-center',
+                  'min-h-12 shrink-0 border-b-2 px-4 py-3 font-semibold',
                   isSelected
-                    ? 'border-blue-600 bg-blue-600 text-white'
-                    : 'border-gray-300 bg-white text-gray-900',
+                    ? 'border-blue-700 text-blue-700'
+                    : 'border-transparent text-slate-600 hover:text-slate-950',
                 ].join(' ')}
               >
-                <span lang="en" className="block font-bold">
-                  {practiceWord.word}
-                </span>
-                <span lang="en" className="block text-sm">
-                  /{practiceWord.ipa}/
-                </span>
-                <span className="mt-1 block text-xs">
-                  検証 {Math.min(
-                    completedAttempts,
-                    REPETITIONS_PER_WORD,
-                  )}/{REPETITIONS_PER_WORD}
+                {group.title}
+                <span className="ml-1 text-xs">
+                  {PRACTICE_SOUNDS.filter(
+                    (sound) => sound.group === group.id,
+                  ).length}
                 </span>
               </button>
             )
           })}
+        </div>
+
+        <div className="mt-5 grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-12">
+          {visibleSounds.map((sound) => {
+            const isSelected = selectedSound.slug === sound.slug
+
+            return (
+              <button
+                key={sound.slug}
+                type="button"
+                aria-pressed={isSelected}
+                aria-label={`/${sound.symbol}/ ${sound.name}`}
+                onClick={() => selectSound(sound)}
+                className={[
+                  'aspect-square min-w-0 border text-lg font-bold',
+                  'focus-visible:outline-2 focus-visible:outline-offset-2',
+                  isSelected
+                    ? 'border-blue-700 bg-blue-700 text-white'
+                    : 'border-slate-300 bg-white text-slate-900 hover:border-blue-500',
+                ].join(' ')}
+              >
+                <span lang="en">/{sound.symbol}/</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="mt-5">
+          <p className="font-bold text-slate-950">
+            <span lang="en">/{selectedSound.symbol}/</span>
+            <span className="ml-2">{selectedSound.name}</span>
+          </p>
+          <div className="mt-3 grid max-w-xl grid-cols-2 gap-2">
+            {selectedSound.examples.map((practiceWord) => {
+              const isSelected = (
+                selectedWord.soundSlug === practiceWord.soundSlug
+                && selectedWord.word === practiceWord.word
+              )
+
+              return (
+                <button
+                  key={`${practiceWord.soundSlug}-${practiceWord.word}`}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => {
+                    setSelectedWord(practiceWord)
+                    resetRecordingResult()
+                  }}
+                  className={[
+                    'border px-3 py-3 text-center',
+                    isSelected
+                      ? 'border-blue-600 bg-blue-600 text-white'
+                      : 'border-gray-300 bg-white text-gray-900',
+                  ].join(' ')}
+                >
+                  <span lang="en" className="block font-bold">
+                    {practiceWord.word}
+                  </span>
+                  <span lang="en" className="block text-sm">
+                    /{practiceWord.ipa}/
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </fieldset>
 
@@ -420,6 +653,9 @@ export default function Recorder({
           発音する単語
         </p>
         <p className="mt-1 text-3xl font-bold">
+          <span lang="en" className="mr-3 text-xl text-blue-700">
+            /{selectedWord.symbol}/
+          </span>
           <span lang="en">{selectedWord.word}</span>
           <span lang="en" className="ml-3 text-xl font-normal text-gray-600">
             /{selectedWord.ipa}/
@@ -482,6 +718,32 @@ export default function Recorder({
         </div>
       )}
 
+      {phonemeResult !== null && (
+        <div className="mt-6 max-w-xl rounded-lg border border-gray-200 p-5">
+          <h2 className="text-xl font-bold">発音認識結果</h2>
+          <dl className="mt-4 grid grid-cols-2 gap-2">
+            <dt className="font-semibold">練習単語</dt>
+            <dd>
+              {selectedWord.word} / {selectedWord.ipa}
+            </dd>
+            <dt className="font-semibold">認識された音素</dt>
+            <dd>
+              {Array.isArray(phonemeResult.phonemes)
+                ? phonemeResult.phonemes.join(' ')
+                : phonemeResult.phonemes}
+            </dd>
+          </dl>
+          <details className="mt-6">
+            <summary className="cursor-pointer font-semibold">
+              開発・研究用の詳細データ
+            </summary>
+            <pre className="mt-2 overflow-x-auto text-sm">
+              {JSON.stringify(phonemeResult, null, 2)}
+            </pre>
+          </details>
+        </div>
+      )}
+
       {result !== null && (
         <div className="mt-6 max-w-xl rounded-lg border border-gray-200 p-5">
           <h2 className="text-xl font-bold">判定結果</h2>
@@ -501,7 +763,7 @@ export default function Recorder({
             <dd>/{result.bestCandidateVowel}/</dd>
 
             <dt className="font-semibold">1位と2位の差</dt>
-            <dd>{result.scoreMargin.toFixed(2)}ポイント</dd>
+            <dd>{formatNumber(result.scoreMargin)}ポイント</dd>
 
             <dt className="font-semibold">候補差の状態</dt>
             <dd>
@@ -600,7 +862,9 @@ export default function Recorder({
                     <span>
                       /{candidate.vowel}/（{candidate.candidateIPA}）
                     </span>
-                    <span>{candidate.relativeScorePercent.toFixed(2)}%</span>
+                    <span>
+                      {formatNumber(candidate.relativeScorePercent)}%
+                    </span>
                   </div>
 
                   <div
@@ -609,12 +873,16 @@ export default function Recorder({
                     aria-label={`/${candidate.vowel}/ の候補内相対スコア`}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                    aria-valuenow={candidate.relativeScorePercent}
+                    aria-valuenow={normalizedPercentage(
+                      candidate.relativeScorePercent,
+                    )}
                   >
                     <div
                       className="h-full rounded-full bg-blue-500"
                       style={{
-                        width: `${candidate.relativeScorePercent}%`,
+                        width: `${normalizedPercentage(
+                          candidate.relativeScorePercent,
+                        )}%`,
                       }}
                     />
                   </div>
@@ -702,7 +970,7 @@ export default function Recorder({
                         /{entry.bestCandidateVowel}/
                       </td>
                       <td className="border border-gray-300 p-2">
-                        {entry.scoreMargin.toFixed(2)}
+                        {formatNumber(entry.scoreMargin)}
                       </td>
                       <td className="border border-gray-300 p-2">
                         {entry.scoreConfidenceStatus === 'clear'

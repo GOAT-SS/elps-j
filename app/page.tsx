@@ -5,7 +5,7 @@ const steps = [
     number: "STEP 1",
     title: "発音知識学習",
     description:
-      "発音記号と、舌の高さ・前後、唇の形などの構成要素を文字と図で確認します。",
+      "アメリカ英語の母音・子音の全41項目から、記号ごとに発音方法や例語を学びます。",
     href: "/learn",
     action: "発音知識を学ぶ",
     accent: "bg-blue-50 text-blue-700",
@@ -47,7 +47,7 @@ export default function Home() {
               <span className="block text-blue-700">構成要素から学ぶ。</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700">
-              英語の音を「舌の位置」「唇の形」などに分けて理解し、
+              アメリカ英語の音を「舌の位置」「唇の形」などに分けて理解し、
               知識・選択演習・録音練習の好きなところから学べるシステムです。
             </p>
             <p className="mt-4 text-sm text-slate-500">

@@ -5,10 +5,13 @@ function errorResponse(message: string, status: number) {
 }
 
 export async function POST(request: Request) {
-  const apiBaseUrl = process.env.PRONUNCIATION_API_BASE_URL
+  const apiBaseUrl = (
+    process.env.PRONUNCIATION_API_BASE_URL
+    ?? process.env.NEXT_PUBLIC_PRONUNCIATION_API_URL
+  )
   const apiKey = process.env.PRONUNCIATION_API_KEY
 
-  if (apiBaseUrl === undefined || apiKey === undefined) {
+  if (apiBaseUrl === undefined) {
     return errorResponse('発音判定APIが設定されていません。', 503)
   }
 
@@ -33,10 +36,11 @@ export async function POST(request: Request) {
     return errorResponse('録音データが大きすぎます。', 413)
   }
 
-  const upstreamHeaders = new Headers({
-    'Content-Type': contentType,
-    'X-Pronunciation-Api-Key': apiKey,
-  })
+  const upstreamHeaders = new Headers({ 'Content-Type': contentType })
+
+  if (apiKey !== undefined) {
+    upstreamHeaders.set('X-Pronunciation-Api-Key', apiKey)
+  }
   const cloudflareClientId = process.env.CLOUDFLARE_ACCESS_CLIENT_ID
   const cloudflareClientSecret =
     process.env.CLOUDFLARE_ACCESS_CLIENT_SECRET

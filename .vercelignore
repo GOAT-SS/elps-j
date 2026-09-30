@@ -1,3 +1,3 @@
-app/backend/.venv/
-app/backend/.venv311/
-app/backend/__pycache__/
+# The pronunciation model runs on the persistent FastAPI host, not Vercel.
+backend/
+tmp/

@@ -1,254 +1,110 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
-import ipaData from "../backend/data/ipa_features.json";
-import practiceConfig from "../data/practice_words.json";
+import { useCallback, useState } from "react";
+import { soundGroups, soundLessons } from "../data/american-english";
+import { createSoundExercise } from "../data/american-english-structures";
 import ConversionBuilder from "./ConversionBuilder";
-import FreeConceptMap, {
-  assessConceptMap,
-  emptyConceptMapSnapshot,
-  type ConceptMapSnapshot,
-  correctConceptMapConnections,
-} from "./FreeConceptMap";
-import {
-  createVowelStructure,
-  pronunciationComponentDefinitions,
-  type VowelFeatureKey,
-} from "./PronunciationDragDrop";
-
-const targetVowels = ["æ", "ʌ", "ɑ"] as const;
-type TargetVowel = (typeof targetVowels)[number];
-
-const vowelGuides: Record<
-  TargetVowel,
-  { summary: string; comparison: string }
-> = {
-  æ: {
-    summary: "舌を前方の低い位置に置き、口を広く開いて作る母音です。",
-    comparison: "/ʌ/ より舌が低く前にあり、/ɑ/ より舌が前にあります。",
-  },
-  ʌ: {
-    summary: "舌を中央の中間的な高さに置き、力を入れすぎずに作る母音です。",
-    comparison: "/æ/・/ɑ/ より舌が高く、舌の前後位置は中央です。",
-  },
-  ɑ: {
-    summary: "舌を後方の低い位置に置き、口を大きく開いて作る母音です。",
-    comparison: "/æ/ と高さは同じですが、舌をより後ろに置きます。",
-  },
-};
+import FreeConceptMap, { assessConceptMap, emptyConceptMapSnapshot, type ConceptMapSnapshot } from "./FreeConceptMap";
 
 export default function ComponentBuilder() {
   const [targetIndex, setTargetIndex] = useState(0);
-  const [mapSnapshot, setMapSnapshot] = useState<ConceptMapSnapshot>(
-    emptyConceptMapSnapshot,
-  );
+  const [mapSnapshot, setMapSnapshot] = useState<ConceptMapSnapshot>(emptyConceptMapSnapshot);
   const [mapRevision, setMapRevision] = useState(0);
   const [hasChecked, setHasChecked] = useState(false);
-  const [completedVowels, setCompletedVowels] = useState<TargetVowel[]>([]);
-
-  const targetVowel = targetVowels[targetIndex];
-  const correctFeatures = ipaData.phonemes[targetVowel]
-    .features as Record<VowelFeatureKey, string>;
-  const correctStructure = createVowelStructure(
-    targetVowel,
-    correctFeatures,
-  );
-  const exampleWords = useMemo(() => {
-    return practiceConfig.rows
-      .map((row) => row.find((word) => word.target_vowel === targetVowel)?.word)
-      .filter((word): word is string => word !== undefined);
-  }, [targetVowel]);
-  const assessment = assessConceptMap(mapSnapshot, correctStructure);
-  const isComplete = assessment.isReady;
-  const isAllCorrect = assessment.isCorrect;
-  const hasCompletedCurrent = completedVowels.includes(targetVowel);
-  const hasCompletedAll = completedVowels.length === targetVowels.length;
-
+  const [completedSounds, setCompletedSounds] = useState<string[]>([]);
+  const sound = soundLessons[targetIndex];
+  const exercise = createSoundExercise(sound);
+  const assessment = assessConceptMap(mapSnapshot, exercise.values, exercise.connections);
+  const hasCompletedAll = completedSounds.length === soundLessons.length;
+  const conversionAvailable = ["ae", "uh", "ah"].every((slug) => completedSounds.includes(slug));
+  const componentLabel = (key: string) => exercise.definitions.find((item) => item.key === key)?.label ?? key;
+  const answerLabel = (key: string) => exercise.definitions.find((item) => item.key === key)?.options.find(([value]) => value === exercise.values[key])?.[1];
   const updateMapSnapshot = useCallback((snapshot: ConceptMapSnapshot) => {
     setMapSnapshot(snapshot);
     setHasChecked(false);
   }, []);
 
-  function selectTarget(index: number) {
-    setTargetIndex(index);
+  function resetMap() {
     setMapSnapshot(emptyConceptMapSnapshot);
     setMapRevision((current) => current + 1);
     setHasChecked(false);
   }
-
+  function selectTarget(index: number) {
+    setTargetIndex(index);
+    resetMap();
+  }
   function showNextTarget() {
-    const nextOffset = targetVowels.findIndex((_, offset) => {
-      const index = (targetIndex + offset + 1) % targetVowels.length;
-      return !completedVowels.includes(targetVowels[index]);
-    });
-
-    if (nextOffset !== -1) {
-      selectTarget((targetIndex + nextOffset + 1) % targetVowels.length);
+    for (let offset = 1; offset <= soundLessons.length; offset++) {
+      const index = (targetIndex + offset) % soundLessons.length;
+      if (!completedSounds.includes(soundLessons[index].slug)) {
+        selectTarget(index);
+        return;
+      }
     }
   }
-
   function checkAnswers() {
     setHasChecked(true);
-
-    if (isAllCorrect && !hasCompletedCurrent) {
-      setCompletedVowels((current) => [...current, targetVowel]);
-    }
+    if (assessment.isCorrect) setCompletedSounds((current) => current.includes(sound.slug) ? current : [...current, sound.slug]);
   }
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-      <div className="mb-7 border-b border-slate-200 pb-6">
-        <div className="flex items-center justify-between gap-4 text-sm">
-          <p className="font-bold text-slate-950">構成要素の理解度</p>
-          <p className="font-semibold text-slate-600">
-            {completedVowels.length} / {targetVowels.length} 問完了
-          </p>
+      <div className="border-b border-slate-200 pb-6">
+        <div className="flex flex-wrap justify-between gap-3 text-sm">
+          <h2 className="font-bold text-slate-950">41項目の構成要素を組み立てる</h2>
+          <p className="font-semibold text-slate-600" aria-live="polite">{completedSounds.length} / {soundLessons.length} 問完了</p>
         </div>
-        <div
-          className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"
-          role="progressbar"
-          aria-label="発音構成理解の進捗"
-          aria-valuemin={0}
-          aria-valuemax={targetVowels.length}
-          aria-valuenow={completedVowels.length}
-        >
-          <div
-            className="h-full bg-emerald-600 transition-[width]"
-            style={{
-              width: `${(completedVowels.length / targetVowels.length) * 100}%`,
-            }}
-          />
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-label="発音構成理解の進捗" aria-valuemin={0} aria-valuemax={soundLessons.length} aria-valuenow={completedSounds.length}>
+          <div className="h-full bg-emerald-600 transition-[width]" style={{ width: `${completedSounds.length / soundLessons.length * 100}%` }} />
         </div>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
-          {pronunciationComponentDefinitions.length}
-          個のノードを自由に配置し、{correctConceptMapConnections.length}
-          本の関係を接続すると1問完了です。
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-6 border-b border-slate-200 pb-7 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-bold text-emerald-700">今回の発音記号</p>
-          <p lang="en" className="mt-2 text-6xl font-bold text-slate-950">
-            /{targetVowel}/
-          </p>
-          <p className="mt-2 text-sm text-slate-500">
-            単語例：<span lang="en">{exampleWords.join("・")}</span>
-          </p>
-        </div>
-        <div>
-          <p className="mb-2 text-xs font-semibold text-slate-500">
-            問題を選ぶ
-          </p>
-          <div className="flex gap-2">
-            {targetVowels.map((vowel, index) => (
-              <button
-                key={vowel}
-                type="button"
-                onClick={() => selectTarget(index)}
-                className={`min-h-11 min-w-14 rounded-xl border px-4 py-2 text-lg font-bold transition ${
-                  targetIndex === index
-                    ? "border-emerald-700 bg-emerald-700 text-white"
-                    : "border-slate-300 bg-white text-slate-800 hover:border-emerald-500"
-                }`}
-                aria-pressed={targetIndex === index}
-              >
-                <span lang="en">/{vowel}/</span>
-                {completedVowels.includes(vowel) ? (
-                  <span className="sr-only"> 完了</span>
-                ) : null}
-                {completedVowels.includes(vowel) ? " ✓" : ""}
-              </button>
-            ))}
-          </div>
+        <p className="mt-3 text-sm text-slate-500">完了状況はこの画面を開いている間に記録されます。好きな記号から取り組めます。</p>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          {soundGroups.map((group) => (
+            <fieldset key={group.id} className="min-w-0">
+              <legend className="text-sm font-bold text-slate-700">{group.title} · {soundLessons.filter((item) => item.group === group.id && completedSounds.includes(item.slug)).length} / {soundLessons.filter((item) => item.group === group.id).length}</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {soundLessons.map((item, index) => item.group === group.id ? (
+                  <button key={item.slug} type="button" onClick={() => selectTarget(index)} aria-pressed={index === targetIndex} aria-label={`/${item.symbol}/ の問題${completedSounds.includes(item.slug) ? " 完了" : ""}`} className={`min-h-11 min-w-14 rounded-xl border px-3 py-2 text-lg font-bold ${index === targetIndex ? "border-emerald-700 bg-emerald-700 text-white" : "border-slate-300 bg-white text-slate-800 hover:border-emerald-500"}`}>
+                    <span lang="en">/{item.symbol}/</span>{completedSounds.includes(item.slug) && <span aria-hidden="true"> ✓</span>}
+                  </button>
+                ) : null)}
+              </div>
+            </fieldset>
+          ))}
         </div>
       </div>
-
+      <section className="mt-6 border-b border-slate-200 pb-6" aria-label="今回の問題">
+        <p className="text-sm font-bold text-emerald-700">今回の発音記号 · {targetIndex + 1} / {soundLessons.length}</p>
+        <h3 lang="en" className="mt-2 text-6xl font-bold text-slate-950">/{sound.symbol}/</h3>
+        <p className="mt-3 text-sm text-slate-600">単語例：<span lang="en">{sound.examples.map((item) => item.word).join("・")}</span></p>
+        <p className="mt-4 text-sm leading-7 text-slate-600">{exercise.definitions.length}個の部品を選び、{exercise.connections.length}本の関係を接続してください。発音記号 → 分類の関係 → 音の種類 → 各構成要素への関係 → 構成要素、の順につなぎます。</p>
+        <Link href={`/learn/${sound.slug}`} className="mt-3 inline-block text-sm font-bold text-blue-700 underline">/{sound.symbol}/ の発音知識を確認する</Link>
+      </section>
       <div className="mt-7">
-        <FreeConceptMap
-          key={`${targetVowel}-${mapRevision}`}
-          mapLabel={`/${targetVowel}/ を自由に組み立てる概念マップ`}
-          onChange={updateMapSnapshot}
-        />
+        <FreeConceptMap key={`${sound.slug}-${mapRevision}`} mapLabel={`/${sound.symbol}/ を自由に組み立てる概念マップ`} definitions={exercise.definitions} onChange={updateMapSnapshot} />
       </div>
-
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <button
-          type="button"
-          disabled={!isComplete}
-          onClick={checkAnswers}
-          className="min-h-12 rounded-full bg-emerald-700 px-6 py-3 font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-        >
-          組み立てた構造を確認
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setMapSnapshot(emptyConceptMapSnapshot);
-            setMapRevision((current) => current + 1);
-            setHasChecked(false);
-          }}
-          className="min-h-12 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700 transition hover:bg-slate-100"
-        >
-          部品をすべて戻す
-        </button>
+      <div className="mt-7 flex flex-wrap gap-3">
+        <button type="button" disabled={!assessment.isReady} onClick={checkAnswers} className="min-h-12 rounded-full bg-emerald-700 px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-300">組み立てた構造を確認</button>
+        <button type="button" onClick={resetMap} className="min-h-12 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700">部品をすべて戻す</button>
+        {!hasCompletedAll && <button type="button" onClick={showNextTarget} className="min-h-12 rounded-full border border-slate-300 bg-white px-6 py-3 font-bold text-slate-700">未完了の発音記号へ</button>}
       </div>
-
+      {!assessment.isReady && <p className="mt-3 text-sm text-slate-500">全ての部品を置き、必要な本数の接続を作ると確認できます。</p>}
       {hasChecked && (
-        <div
-          role="status"
-          className={`mt-7 rounded-2xl p-5 ${
-            isAllCorrect
-              ? "bg-emerald-50 text-emerald-950"
-              : "bg-amber-50 text-amber-950"
-          }`}
-        >
-          <p className="text-lg font-bold">
-            {isAllCorrect
-              ? "すべて合っています。"
-              : `正しいノード ${assessment.correctNodeCount}/${pronunciationComponentDefinitions.length}、正しい接続 ${assessment.correctConnectionCount}/${correctConceptMapConnections.length} です。`}
-          </p>
-          <p className="mt-2 text-sm leading-6">
-            {vowelGuides[targetVowel].summary}
-          </p>
-          <p className="mt-2 text-sm leading-6">
-            比較のポイント：{vowelGuides[targetVowel].comparison}
-          </p>
-          {isAllCorrect ? (
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link
-                href={`/practice?vowel=${encodeURIComponent(targetVowel)}`}
-                className="rounded-full bg-violet-700 px-5 py-2.5 font-bold text-white transition hover:bg-violet-800"
-              >
-                /{targetVowel}/ を発音練習する
-              </Link>
-              {!hasCompletedAll ? (
-                <button
-                  type="button"
-                  onClick={showNextTarget}
-                  className="rounded-full bg-slate-950 px-5 py-2.5 font-bold text-white transition hover:bg-slate-800"
-                >
-                  未完了の発音記号へ
-                </button>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+        <section role="status" className={`mt-7 rounded-2xl p-5 ${assessment.isCorrect ? "bg-emerald-50 text-emerald-950" : "bg-amber-50 text-amber-950"}`}>
+          <h3 className="text-lg font-bold">{assessment.isCorrect ? "すべて合っています。" : `正しい部品 ${assessment.correctNodeCount}/${exercise.definitions.length}、正しい接続 ${assessment.correctConnectionCount}/${exercise.connections.length} です。`}</h3>
+          {!assessment.isCorrect && <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6">
+            {assessment.incorrectKeys.map((key) => <li key={key}>{componentLabel(key)}：この教材での答えは「{answerLabel(key)}」です。</li>)}
+            {assessment.missingConnections.map(([source, target]) => <li key={`${source}-${target}`}>「{componentLabel(source)} → {componentLabel(target)}」の接続を確認しましょう。</li>)}
+            {assessment.extraConnections.length > 0 && <li>不要な接続が{assessment.extraConnections.length}本あります。接続一覧から削除できます。</li>}
+          </ul>}
+          <p className="mt-4 text-sm leading-7">{sound.steps.join(" ")}</p>
+          <p className="mt-2 text-sm leading-7">{sound.tip}</p>
+          {["ae", "uh", "ah"].includes(sound.slug) && assessment.isCorrect && <Link href={`/practice?vowel=${encodeURIComponent(sound.symbol)}`} className="mt-4 inline-block font-bold underline">/{sound.symbol}/ を録音練習する →</Link>}
+        </section>
       )}
-
-      {hasCompletedAll ? (
-        <div className="mt-7 border-t border-emerald-200 pt-7">
-          <p className="text-xl font-bold text-emerald-950">
-            個別母音の構成が完了しました。
-          </p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            次は学部版の学習活動と同じように、作った構成を近い母音へ変換し、
-            変える要素と残す要素を確認します。
-          </p>
-          <ConversionBuilder />
-        </div>
-      ) : null}
+      {hasCompletedAll && <div role="status" className="mt-7 rounded-2xl bg-emerald-50 p-6 text-emerald-950"><p className="text-xl font-bold">アメリカ英語の基本41項目の構成理解が完了しました。</p><p className="mt-2">記号を選び直して、何度でも復習できます。</p></div>}
+      {conversionAvailable && <details className="mt-7 border-t border-slate-200 pt-5"><summary className="cursor-pointer font-bold text-slate-700">追加演習：/æ/・/ʌ/・/ɑ/ の構造変換</summary><p className="mt-3 text-sm leading-7 text-slate-600">従来の3母音を比較する演習です。舌の高さを高・中・低の3段階で扱います。</p><ConversionBuilder /></details>}
     </div>
   );
 }

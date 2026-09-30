@@ -1,181 +1,61 @@
 import Link from "next/link";
-import ipaData from "../backend/data/ipa_features.json";
-
-const componentLabels = {
-  height: "舌の高さ",
-  backness: "舌の前後",
-  rounding: "唇の丸め",
-  tenseness: "緊張性",
-} as const;
-
-const valueLabels: Record<string, string> = {
-  high: "高い",
-  mid: "中間",
-  low: "低い",
-  front: "前",
-  central: "中央",
-  back: "後ろ",
-  rounded: "円唇",
-  unrounded: "非円唇",
-  tense: "緊張",
-  lax: "弛緩",
-  neutral: "中立",
-  unspecified: "未指定",
-};
-
-const vowelGuides = [
-  {
-    symbol: "æ",
-    words: "cap / hat / stack",
-    cue: "口を横にも縦にも開き、舌を前方の低い位置に置く意識。",
-    mouth: "h-10 w-20",
-    position: { left: "21%", top: "68%" },
-  },
-  {
-    symbol: "ʌ",
-    words: "cup / hut / stuck",
-    cue: "力を入れすぎず、舌を中央付近に置いて短く発音する意識。",
-    mouth: "h-8 w-16",
-    position: { left: "50%", top: "46%" },
-  },
-  {
-    symbol: "ɑ",
-    words: "cop / hot / stock",
-    cue: "口を大きく開き、舌を後方の低い位置に置く意識。",
-    mouth: "h-12 w-16",
-    position: { left: "78%", top: "68%" },
-  },
-] as const;
+import { soundGroups, soundLessons } from "../data/american-english";
 
 export default function LearnPage() {
   return (
     <main className="flex-1">
       <section className="border-b border-blue-100 bg-blue-50">
-        <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-          <p
-            lang="en"
-            className="text-sm font-bold tracking-[0.14em] text-blue-700"
-          >
-            STEP 1
-          </p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950">
-            発音知識学習
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">
-            母音は、舌の高さ・舌の前後・唇の丸め・緊張性などの組み合わせで整理できます。
-            まずは練習対象の /æ/・/ʌ/・/ɑ/ を比べます。
-          </p>
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+          <p lang="en" className="text-sm font-bold tracking-widest text-blue-700">STEP 1 · GENERAL AMERICAN</p>
+          <h1 className="mt-3 text-4xl font-bold text-slate-950">発音知識学習</h1>
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">アメリカ英語の発音記号を、ひとつずつ。記号を選んで、口と舌の使い方・例語・似た音との違いを学びましょう。</p>
+          <p className="mt-4 text-sm leading-7 text-slate-600">一般的なアメリカ英語（General American）を基準に、母音17項目・子音24項目を扱います。弱母音やR音性母音を個別に数えた学習用の分類です。音素の数え方や発音には辞書・地域による違いがあります。</p>
+          <nav aria-label="発音記号の分類" className="mt-7 flex flex-wrap gap-3">
+            {soundGroups.map((group) => <a key={group.id} href={`#${group.id}`} className="rounded-full border border-blue-200 bg-white px-4 py-2 font-semibold text-blue-700 hover:underline">{group.title} · {soundLessons.filter((sound) => sound.group === group.id).length}</a>)}
+            <a href="#notation" className="rounded-full border border-blue-200 bg-white px-4 py-2 font-semibold text-blue-700 hover:underline">表記と音の変化</a>
+          </nav>
         </div>
       </section>
-
-      <section className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="text-sm font-bold text-blue-700">舌の位置のイメージ</p>
-          <h2 className="mt-2 text-2xl font-bold">前後と高さを比べる</h2>
-          <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex justify-between text-xs font-semibold text-slate-500">
-              <span>前</span>
-              <span>舌の位置</span>
-              <span>後ろ</span>
-            </div>
-            <div className="relative mt-3 h-72 overflow-hidden rounded-[3rem_7rem_4rem_6rem] border-2 border-slate-200 bg-gradient-to-b from-blue-50 to-rose-50">
-              <span className="absolute left-3 top-3 text-xs font-semibold text-slate-500">
-                高い
-              </span>
-              <span className="absolute bottom-3 left-3 text-xs font-semibold text-slate-500">
-                低い
-              </span>
-              <div className="absolute inset-x-8 top-1/2 border-t border-dashed border-slate-300" />
-              <div className="absolute inset-y-8 left-1/2 border-l border-dashed border-slate-300" />
-              {vowelGuides.map((vowel) => (
-                <span
-                  key={vowel.symbol}
-                  lang="en"
-                  className="absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-blue-700 text-xl font-bold text-white shadow-lg"
-                  style={vowel.position}
-                >
-                  {vowel.symbol}
-                </span>
+      <div className="mx-auto max-w-6xl space-y-12 px-5 py-12 sm:px-8">
+        {soundGroups.map((group) => (
+          <section key={group.id} id={group.id} className="scroll-mt-6" aria-labelledby={`${group.id}-title`}>
+            <h2 id={`${group.id}-title`} className="text-2xl font-bold text-slate-950">{group.title}</h2>
+            <p className="mt-2 text-slate-600">{group.description}</p>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {soundLessons.filter((sound) => sound.group === group.id).map((sound) => (
+                <Link key={sound.slug} href={`/learn/${sound.slug}`} className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-700 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-700">
+                  <span lang="en" className="block text-4xl font-bold text-blue-700">/{sound.symbol}/</span>
+                  <span lang="en" className="mt-3 block text-lg text-slate-950">{sound.examples.map((example) => example.word).join(" / ")}</span>
+                  <span className="mt-2 block text-xs leading-5 text-slate-500">{sound.name}</span>
+                  <span className="mt-4 block text-sm font-bold text-blue-700 group-hover:underline">この音を学ぶ →</span>
+                </Link>
               ))}
             </div>
-            <p className="mt-4 text-xs leading-5 text-slate-500">
-              この図は位置関係を理解するための模式図です。実際の舌の位置や音価は話者・方言によって変わります。
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <p className="text-sm font-bold text-blue-700">発音の目安</p>
-          <h2 className="mt-2 text-2xl font-bold">3つの母音を見比べる</h2>
-          <div className="mt-6 space-y-4">
-            {vowelGuides.map((vowel) => {
-              const features = ipaData.phonemes[vowel.symbol].features;
-
-              return (
-                <article
-                  key={vowel.symbol}
-                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
-                >
-                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                    <div className="flex min-w-28 flex-col items-center rounded-2xl bg-slate-950 px-5 py-4 text-white">
-                      <span lang="en" className="text-4xl font-bold">
-                        /{vowel.symbol}/
-                      </span>
-                      <span
-                        role="img"
-                        aria-label={`口の開き方の目安：${vowel.symbol}`}
-                        className={`mt-3 rounded-[50%] border-4 border-rose-300 bg-rose-950 ${vowel.mouth}`}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-slate-950">
-                        例：<span lang="en">{vowel.words}</span>
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-600">
-                        {vowel.cue}
-                      </p>
-                      <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
-                        {Object.entries(features).map(([key, value]) => (
-                          <div
-                            key={key}
-                            className="rounded-xl bg-slate-100 px-3 py-2"
-                          >
-                            <dt className="text-xs text-slate-500">
-                              {componentLabels[
-                                key as keyof typeof componentLabels
-                              ] ?? key}
-                            </dt>
-                            <dd className="mt-1 font-bold text-slate-900">
-                              {valueLabels[value] ?? value}
-                            </dd>
-                          </div>
-                        ))}
-                      </dl>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-6xl px-5 pb-14 sm:px-8">
-        <div className="flex flex-col gap-4 rounded-3xl bg-slate-900 p-7 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-bold text-blue-300">理解を試す</p>
-            <p className="mt-2 text-lg font-semibold">
-              構成要素を自分で選んで確認できます。
-            </p>
-          </div>
-          <Link
-            href="/components"
-            className="rounded-full bg-white px-5 py-3 text-center font-bold text-slate-950 transition hover:bg-blue-100"
-          >
-            発音構成理解を開く
-          </Link>
-        </div>
-      </section>
+          </section>
+        ))}
+        <section id="notation" className="scroll-mt-6 rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
+          <h2 className="text-2xl font-bold text-slate-950">発音記号の読み方と、会話での音の変化</h2>
+          <p className="mt-3 leading-7 text-slate-600">/ / は語の音を区別するための表記、[ ] は実際の音の詳しい表記に使います。以下は独立した基本音の追加ではなく、読み方の記号や音の変化です。</p>
+          <dl className="mt-6 grid gap-6 sm:grid-cols-2">
+            {[
+              ["ˈ・ˌ・.", "ˈ は主強勢、ˌ は副強勢で、強く読む音節の前につきます。. は音節の区切りです。例：about /əˈbaʊt/。"],
+              ["ː と辞書の表記", "ː は長さの記号です。本教材では /i, u, ɑ, ɔ/ と書きますが、/iː, uː, ɑː, ɔː/ とする辞書もあります。/ɛ/ を /e/、/ɝ/ を /ɜr/、/ɚ/ を /ər/ と書く場合もあります。"],
+              ["[ɾ]：はじき音", "water や city などの /t/、ladder などの /d/ は、強勢のある母音の後・強勢のない母音の前などで、舌先を歯茎に一瞬当てる音になることがあります。"],
+              ["[ʔ]：声門閉鎖音", "button などで /t/ が喉で息を一瞬止める音になったり、その閉鎖を伴ったりすることがあります。現れ方には話者や発話スタイルによる違いがあります。"],
+              ["[ɫ]・[l̩]・[n̩]", "[ɫ] は舌の奥も持ち上げた暗いLです。[l̩]・[n̩] の下の印は、子音だけで音節の中心になることを示します。little や button の語末などで現れます。"],
+              ["[pʰ, tʰ, kʰ]：息の強い破裂音", "ʰ は息を伴うことを示します。強勢のある音節の先頭の /p, t, k/ などで現れ、spin・stay・sky の /s/ 直後では通常その息が弱くなります。"],
+              ["母音＋ /r/", "car /kɑr/、door /dɔr/、near /nɪr/、care /kɛr/ のような組み合わせもあります。アメリカ英語では語末のRも発音します。まず母音と /r/ の各ページで形を学び、続けて発音します。"],
+              ["イギリス英語との違い", "イギリス英語の表記に見られる /ɒ, əʊ, ɪə, eə, ʊə/ は、この教材では独立した基本項目にしていません。米語では語に応じて /ɑ, oʊ/ や母音＋ /r/ などを用います。"],
+            ].map(([title, body]) => <div key={title}><dt className="font-bold text-slate-950">{title}</dt><dd className="mt-2 text-sm leading-7 text-slate-600">{body}</dd></div>)}
+          </dl>
+          <p className="mt-7 text-sm leading-7 text-slate-500">表記の参考：<a href="https://dictionary.cambridge.org/help/phonetics.html" className="text-blue-700 underline">Cambridge Dictionary 発音記号ガイド</a>、<a href="https://www.oxfordlearnersdictionaries.com/us/about/pronunciation_american_english.html" className="text-blue-700 underline">Oxford アメリカ英語発音ガイド</a>。例語の音声を辞書で確認するときは US（米語）を選んでください。</p>
+        </section>
+        <aside className="rounded-3xl bg-blue-50 p-7">
+          <h2 className="text-xl font-bold text-slate-950">学んだ知識を使ってみる</h2>
+          <p className="mt-3 leading-7 text-slate-600">発音構成理解や録音練習にも進めます。各STEPの演習対象は、その画面に表示される音です。</p>
+          <div className="mt-4 flex flex-wrap gap-5 font-bold text-blue-700"><Link href="/components" className="underline">発音構成理解へ →</Link><Link href="/practice" className="underline">発音練習へ →</Link></div>
+        </aside>
+      </div>
     </main>
   );
 }

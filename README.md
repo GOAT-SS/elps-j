@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ELPS-J
 
-## Getting Started
+英語の発音知識を学び、録音した発音へフィードバックを返す学習アプリです。
 
-First, run the development server:
+## 構成
+
+```text
+elps-j/
+├── app/                 # Next.jsの画面・Route Handler・教材データ
+│   ├── api/             # ブラウザーとFastAPIの間のプロキシ
+│   └── data/            # IPA・練習語などの共有データ
+├── backend/             # FastAPIと音声モデル
+│   ├── main.py
+│   └── requirements.txt
+├── public/              # 静的ファイル
+└── tests/               # フロントエンド側のテスト
+```
+
+Pythonの仮想環境、Next.jsの生成物、依存パッケージはGitへ保存しません。
+
+## 必要なもの
+
+- Node.js 20以上
+- Python 3.11推奨
+- FFmpeg
+- Hugging Faceで `KoelLabs/xlsr-english-01` の利用条件を承認したアカウント
+
+## 初回セットアップ
+
+### 1. フロントエンド
+
+```bash
+npm install
+cp .env.example .env.local
+```
+
+`.env.local` の `PRONUNCIATION_API_KEY` を、十分に長いランダムな値へ変更してください。
+
+### 2. バックエンド（macOS/Linux）
+
+```bash
+python3.11 -m venv backend/.venv
+backend/.venv/bin/python -m pip install --upgrade pip
+backend/.venv/bin/python -m pip install -r backend/requirements.txt
+hf auth login
+backend/.venv/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download('KoelLabs/xlsr-english-01')"
+```
+
+NVIDIA GPUを使用する場合は、先にPyTorch公式の案内に従ってCUDA対応版PyTorchをインストールしてください。
+
+### 3. バックエンド（Windows PowerShell）
+
+```powershell
+py -3.11 -m venv backend\.venv
+.\backend\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+hf auth login
+.\backend\.venv\Scripts\python.exe -c "from huggingface_hub import snapshot_download; snapshot_download('KoelLabs/xlsr-english-01')"
+```
+
+## ローカル起動
+
+ターミナルを2つ使います。
+
+### ターミナル1：発音判定バックエンド
+
+macOS/Linux:
+
+```bash
+backend/.venv/bin/python -m uvicorn backend.main:app --env-file .env.local --host 127.0.0.1 --port 8000
+```
+
+Windows PowerShell:
+
+```powershell
+.\backend\.venv\Scripts\python.exe -m uvicorn backend.main:app --env-file .env.local --host 127.0.0.1 --port 8000
+```
+
+確認URL：<http://127.0.0.1:8000/health>
+
+### ターミナル2：Next.js
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+アプリ：<http://localhost:3000>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 処理の流れ
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+ブラウザー
+  → Next.js /api/analyze-pronunciation
+  → FastAPI /analyze-pronunciation
+  → KoelLabs/xlsr-english-01
+  → IPA・候補比較・構成要素フィードバック
+```
 
-## Learn More
+ブラウザーからFastAPIへ直接秘密鍵を送らないため、Next.jsのRoute Handlerを経由します。
 
-To learn more about Next.js, take a look at the following resources:
+## 確認コマンド
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run lint
+npm test
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## メモリについて
 
-## Deploy on Vercel
+`npm run dev` はTurbopackによる開発用監視を行います。通常、この規模のアプリだけで数十GBの実メモリを使うことはありません。VS Codeでは `.next`、`node_modules`、Python仮想環境を監視対象から除外する設定を同梱しています。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+発音モデルはNext.jsとは別プロセスです。メモリが限られる端末では、不要なElectronアプリやブラウザータブを閉じてから起動してください。

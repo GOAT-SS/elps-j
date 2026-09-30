@@ -10,13 +10,13 @@ export default function ComponentsPage() {
             lang="en"
             className="text-sm font-bold tracking-[0.14em] text-emerald-700"
           >
-            STEP 2
+            STEP 2 · GENERAL AMERICAN
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950">
             発音構成理解
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">
-            発音記号から、その音を作る構成要素を選択します。
+            アメリカ英語の基本41項目について、その音を作る構成要素を選び、概念マップを組み立てます。
             まずは答えを見ずに選び、自分の理解を確かめてみましょう。
           </p>
         </div>
@@ -42,8 +42,7 @@ export default function ComponentsPage() {
           <div className="rounded-3xl border border-amber-200 bg-amber-50 p-6">
             <p className="font-bold text-amber-950">データについて</p>
             <p className="mt-2 text-sm leading-6 text-amber-900">
-              構成要素の辞書は暫定版です。方言や参照文献による違いを確認しながら、
-              今後も見直します。
+              General American を基準にした学習用の分類です。舌の位置はおおまかな目安で、方言や話者による違いがあります。二重母音は開始位置と移動方向、R音性母音はRの響きと強勢を扱います。
             </p>
           </div>
 

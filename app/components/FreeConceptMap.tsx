@@ -22,13 +22,20 @@ import "@xyflow/react/dist/style.css";
 import { useCallback, useEffect, useState } from "react";
 import {
   pronunciationComponentDefinitions,
-  type PronunciationComponentKey,
 } from "./PronunciationDragDrop";
+
+import {
+  assessStructure,
+  type ComponentDefinition,
+  type ConceptConnection,
+  type ConceptMapSnapshot,
+} from "../data/concept-map";
+export { emptyConceptMapSnapshot, type ConceptMapSnapshot } from "../data/concept-map";
 
 const kitNodeMimeType = "application/x-elps-j-concept-node";
 
 export const correctConceptMapConnections: Array<
-  readonly [PronunciationComponentKey, PronunciationComponentKey]
+  ConceptConnection
 > = [
   ["symbol", "classificationLink"],
   ["classificationLink", "soundType"],
@@ -44,7 +51,7 @@ export const correctConceptMapConnections: Array<
 type KitNodeKind = "concept" | "relation";
 
 type KitNodeData = {
-  componentKey: PronunciationComponentKey;
+  componentKey: string;
   value: string;
   label: string;
   kind: KitNodeKind;
@@ -54,50 +61,15 @@ type KitFlowNode = Node<KitNodeData, "kitNode">;
 
 type KitPart = KitNodeData;
 
-export type ConceptMapSnapshot = {
-  values: Partial<Record<PronunciationComponentKey, string>>;
-  connections: Array<{
-    source: PronunciationComponentKey;
-    target: PronunciationComponentKey;
-  }>;
-};
-
-export const emptyConceptMapSnapshot: ConceptMapSnapshot = {
-  values: {},
-  connections: [],
-};
-
 export function assessConceptMap(
   snapshot: ConceptMapSnapshot,
-  correctValues: Record<PronunciationComponentKey, string>,
+  correctValues: Record<string, string>,
+  connections: ReadonlyArray<ConceptConnection> = correctConceptMapConnections,
 ) {
-  const correctNodeCount = pronunciationComponentDefinitions.filter(
-    ({ key }) => snapshot.values[key] === correctValues[key],
-  ).length;
-  const connectionSet = new Set(
-    snapshot.connections.map(({ source, target }) => `${source}->${target}`),
-  );
-  const correctConnectionCount = correctConceptMapConnections.filter(
-    ([source, target]) => connectionSet.has(`${source}->${target}`),
-  ).length;
-  const isReady =
-    Object.keys(snapshot.values).length ===
-      pronunciationComponentDefinitions.length &&
-    snapshot.connections.length >= correctConceptMapConnections.length;
-  const isCorrect =
-    correctNodeCount === pronunciationComponentDefinitions.length &&
-    correctConnectionCount === correctConceptMapConnections.length &&
-    snapshot.connections.length === correctConceptMapConnections.length;
-
-  return {
-    correctNodeCount,
-    correctConnectionCount,
-    isReady,
-    isCorrect,
-  };
+  return assessStructure(snapshot, correctValues, connections);
 }
 
-function nodeKind(componentKey: PronunciationComponentKey): KitNodeKind {
+function nodeKind(componentKey: string): KitNodeKind {
   return componentKey.endsWith("Link") ? "relation" : "concept";
 }
 
@@ -108,7 +80,7 @@ function KitConceptNode({ data, selected }: NodeProps<KitFlowNode>) {
     <div
       className={`min-w-32 border px-4 py-3 text-center shadow-sm ${
         isRelation
-          ? "rounded-full border-blue-500 bg-blue-50 text-blue-950"
+          ? "rounded-full border-blue-500 bg-blue-50 text-blue-700"
           : "rounded-md border-emerald-600 bg-white text-slate-950"
       } ${selected ? "ring-2 ring-amber-400 ring-offset-2" : ""}`}
     >
@@ -139,8 +111,8 @@ function snapshotFrom(nodes: KitFlowNode[], edges: Edge[]): ConceptMapSnapshot {
       nodes.map(({ data }) => [data.componentKey, data.value]),
     ),
     connections: edges.map(({ source, target }) => ({
-      source: source as PronunciationComponentKey,
-      target: target as PronunciationComponentKey,
+      source,
+      target,
     })),
   };
 }
@@ -148,14 +120,19 @@ function snapshotFrom(nodes: KitFlowNode[], edges: Edge[]): ConceptMapSnapshot {
 export default function FreeConceptMap({
   mapLabel,
   onChange,
+  definitions = pronunciationComponentDefinitions,
 }: {
   mapLabel: string;
+  definitions?: ReadonlyArray<ComponentDefinition>;
   onChange: (snapshot: ConceptMapSnapshot) => void;
 }) {
   const [nodes, setNodes, onNodesChange] = useNodesState<KitFlowNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [flowInstance, setFlowInstance] =
     useState<ReactFlowInstance<KitFlowNode, Edge> | null>(null);
+
+  const [sourceNode, setSourceNode] = useState("");
+  const [targetNode, setTargetNode] = useState("");
 
   useEffect(() => {
     onChange(snapshotFrom(nodes, edges));
@@ -241,7 +218,13 @@ export default function FreeConceptMap({
       return;
     }
 
-    const part = JSON.parse(serializedPart) as KitPart;
+    let part: KitPart;
+    try {
+      part = JSON.parse(serializedPart) as KitPart;
+      if (!part || !definitions.some((definition) => definition.key === part.componentKey && definition.options.some(([value]) => value === part.value))) return;
+    } catch {
+      return;
+    }
     addPart(
       part,
       flowInstance.screenToFlowPosition({
@@ -255,8 +238,9 @@ export default function FreeConceptMap({
     <div className="grid gap-6 lg:grid-cols-[minmax(18rem,22rem)_minmax(0,1fr)] lg:items-start">
       <div className="min-w-0">
         <p className="text-sm font-bold text-emerald-700">キット</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">部品はクリックまたはドラッグで追加できます。同じ項目の別の部品を選ぶと置き換わります。</p>
         <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-4">
-          {pronunciationComponentDefinitions.map((definition) => (
+          {definitions.map((definition) => (
             <fieldset
               key={definition.key}
               className={
@@ -289,7 +273,7 @@ export default function FreeConceptMap({
                       aria-pressed={isPlaced}
                       className={`min-h-11 cursor-grab border px-4 py-2 text-sm font-semibold transition active:cursor-grabbing ${
                         part.kind === "relation"
-                          ? "rounded-full border-blue-400 bg-blue-50 text-blue-950"
+                          ? "rounded-full border-blue-400 bg-blue-50 text-blue-700"
                           : "rounded-md border-slate-300 bg-white text-slate-800"
                       } ${
                         isPlaced
@@ -314,6 +298,8 @@ export default function FreeConceptMap({
             {nodes.length} ノード・{edges.length} 接続
           </p>
         </div>
+        <p className="mb-3 text-sm leading-6 text-slate-600">下の接続点から別の部品の上の接続点へ線を引きます。画面下の選択欄からも接続・削除できます。「全体を表示」で全ての部品を見渡せます。</p>
+        <button type="button" onClick={() => flowInstance?.fitView({ padding: 0.2 })} className="mb-3 min-h-11 rounded-xl border border-slate-300 px-4 text-sm font-bold text-slate-700">全体を表示</button>
         <div
           aria-label={mapLabel}
           className="h-[36rem] overflow-hidden border border-slate-300 bg-white sm:h-[42rem]"
@@ -350,6 +336,27 @@ export default function FreeConceptMap({
             />
           </ReactFlow>
         </div>
+        <fieldset className="mt-4 min-w-0 rounded-2xl border border-slate-200 p-4">
+          <legend className="font-bold text-slate-700">選択して接続する</legend>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="min-w-0 text-sm text-slate-700">接続元
+              <select aria-label="接続元" value={sourceNode} onChange={(event) => setSourceNode(event.target.value)} className="mt-1 block min-h-11 w-full rounded-lg border border-slate-300 bg-white p-2">
+                <option value="">部品を選ぶ</option>
+                {nodes.map((node) => <option key={node.id} value={node.id}>{definitions.find((item) => item.key === node.id)?.label}：{node.data.label}</option>)}
+              </select>
+            </label>
+            <label className="min-w-0 text-sm text-slate-700">接続先
+              <select aria-label="接続先" value={targetNode} onChange={(event) => setTargetNode(event.target.value)} className="mt-1 block min-h-11 w-full rounded-lg border border-slate-300 bg-white p-2">
+                <option value="">部品を選ぶ</option>
+                {nodes.map((node) => <option key={node.id} value={node.id}>{definitions.find((item) => item.key === node.id)?.label}：{node.data.label}</option>)}
+              </select>
+            </label>
+          </div>
+          <button type="button" disabled={!nodes.some((node) => node.id === sourceNode) || !nodes.some((node) => node.id === targetNode) || sourceNode === targetNode || edges.some((edge) => edge.source === sourceNode && edge.target === targetNode)} onClick={() => onConnect({ source: sourceNode, target: targetNode, sourceHandle: null, targetHandle: null })} className="mt-3 min-h-11 rounded-xl bg-emerald-700 px-4 font-bold text-white disabled:opacity-40">接続を追加</button>
+          <ul className="mt-4 space-y-2 text-sm text-slate-700">
+            {edges.map((edge) => <li key={edge.id} className="flex items-center justify-between gap-3"><span className="min-w-0">{nodes.find((node) => node.id === edge.source)?.data.label} → {nodes.find((node) => node.id === edge.target)?.data.label}</span><button type="button" aria-label={`${nodes.find((node) => node.id === edge.source)?.data.label}から${nodes.find((node) => node.id === edge.target)?.data.label}への接続を削除`} onClick={() => setEdges((current) => current.filter((item) => item.id !== edge.id))} className="min-h-11 shrink-0 px-2 text-blue-700 underline">削除</button></li>)}
+          </ul>
+        </fieldset>
       </div>
     </div>
   );

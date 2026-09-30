@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import ipaData from "../backend/data/ipa_features.json";
+import ipaData from "../data/ipa_features.json";
 import FreeConceptMap, {
   assessConceptMap,
   emptyConceptMapSnapshot,

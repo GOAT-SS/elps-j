@@ -1,0 +1,9 @@
+fastapi>=0.115,<1
+huggingface-hub>=0.26,<2
+librosa>=0.10.2,<1
+numpy>=1.26,<3
+python-multipart>=0.0.12,<1
+soundfile>=0.12.1,<1
+torch>=2.3,<3
+transformers>=4.46,<6
+uvicorn[standard]>=0.30,<1
