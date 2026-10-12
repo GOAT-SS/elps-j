@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import ipaData from "../data/ipa_features.json";
+import { soundLessons } from "../data/american-english";
 import FreeConceptMap, {
   assessConceptMap,
   emptyConceptMapSnapshot,
@@ -55,10 +55,8 @@ export default function ConversionBuilder() {
   const [completedCount, setCompletedCount] = useState(0);
 
   const task = conversionTasks[taskIndex];
-  const sourceFeatures = ipaData.phonemes[task.source]
-    .features as Record<VowelFeatureKey, string>;
-  const targetFeatures = ipaData.phonemes[task.target]
-    .features as Record<VowelFeatureKey, string>;
+  const sourceFeatures = Object.fromEntries(["height", "backness", "rounding", "tenseness"].map(key => [key, soundLessons.find(sound => sound.symbol === task.source)!.structure[key]])) as Record<VowelFeatureKey, string>;
+  const targetFeatures = Object.fromEntries(["height", "backness", "rounding", "tenseness"].map(key => [key, soundLessons.find(sound => sound.symbol === task.target)!.structure[key]])) as Record<VowelFeatureKey, string>;
   const sourceStructure = createVowelStructure(task.source, sourceFeatures);
   const targetStructure = createVowelStructure(task.target, targetFeatures);
   const correctDifferences = useMemo(() => {

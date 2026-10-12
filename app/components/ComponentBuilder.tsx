@@ -7,8 +7,8 @@ import { createSoundExercise } from "../data/american-english-structures";
 import ConversionBuilder from "./ConversionBuilder";
 import FreeConceptMap, { assessConceptMap, emptyConceptMapSnapshot, type ConceptMapSnapshot } from "./FreeConceptMap";
 
-export default function ComponentBuilder() {
-  const [targetIndex, setTargetIndex] = useState(0);
+export default function ComponentBuilder({ initialSoundSlug }: { initialSoundSlug?: string }) {
+  const [targetIndex, setTargetIndex] = useState(() => Math.max(0, soundLessons.findIndex(sound => sound.slug === initialSoundSlug)));
   const [mapSnapshot, setMapSnapshot] = useState<ConceptMapSnapshot>(emptyConceptMapSnapshot);
   const [mapRevision, setMapRevision] = useState(0);
   const [hasChecked, setHasChecked] = useState(false);
@@ -100,11 +100,11 @@ export default function ComponentBuilder() {
           </ul>}
           <p className="mt-4 text-sm leading-7">{sound.steps.join(" ")}</p>
           <p className="mt-2 text-sm leading-7">{sound.tip}</p>
-          {["ae", "uh", "ah"].includes(sound.slug) && assessment.isCorrect && <Link href={`/practice?vowel=${encodeURIComponent(sound.symbol)}`} className="mt-4 inline-block font-bold underline">/{sound.symbol}/ を録音練習する →</Link>}
+          {assessment.isCorrect && <Link href={`/practice?sound=${encodeURIComponent(sound.slug)}`} className="mt-4 inline-block font-bold underline">/{sound.symbol}/ を録音練習する →</Link>}
         </section>
       )}
       {hasCompletedAll && <div role="status" className="mt-7 rounded-2xl bg-emerald-50 p-6 text-emerald-950"><p className="text-xl font-bold">アメリカ英語の基本41項目の構成理解が完了しました。</p><p className="mt-2">記号を選び直して、何度でも復習できます。</p></div>}
-      {conversionAvailable && <details className="mt-7 border-t border-slate-200 pt-5"><summary className="cursor-pointer font-bold text-slate-700">追加演習：/æ/・/ʌ/・/ɑ/ の構造変換</summary><p className="mt-3 text-sm leading-7 text-slate-600">従来の3母音を比較する演習です。舌の高さを高・中・低の3段階で扱います。</p><ConversionBuilder /></details>}
+      {conversionAvailable && <details className="mt-7 border-t border-slate-200 pt-5"><summary className="cursor-pointer font-bold text-slate-700">追加演習：/æ/・/ʌ/・/ɑ/ の構造変換</summary><p className="mt-3 text-sm leading-7 text-slate-600">従来の3母音を比較する演習です。共通の教材定義で、舌の位置などの違いを比べます。</p><ConversionBuilder /></details>}
     </div>
   );
 }

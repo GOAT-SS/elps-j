@@ -1,0 +1,1677 @@
+{
+  "schemaVersion": 1,
+  "groups": [
+    {
+      "id": "vowel",
+      "title": "単母音",
+      "description": "舌の高さ・前後と唇の形から学ぶ10項目。"
+    },
+    {
+      "id": "diphthong",
+      "title": "二重母音",
+      "description": "1つの音節の中で、舌と唇をなめらかに動かす5項目。"
+    },
+    {
+      "id": "rhotic",
+      "title": "R音性母音",
+      "description": "母音そのものにRの響きを加える2項目。"
+    },
+    {
+      "id": "consonant",
+      "title": "子音",
+      "description": "音を作る場所・息の通し方・声帯の振動から学ぶ24項目。"
+    }
+  ],
+  "featureDefinitions": {
+    "height": {
+      "label": "舌の高さ",
+      "options": [
+        [
+          "high",
+          "高い"
+        ],
+        [
+          "near-high",
+          "やや高い"
+        ],
+        [
+          "mid",
+          "中間"
+        ],
+        [
+          "open-mid",
+          "中低"
+        ],
+        [
+          "low",
+          "低い"
+        ]
+      ]
+    },
+    "backness": {
+      "label": "舌の前後",
+      "options": [
+        [
+          "front",
+          "前"
+        ],
+        [
+          "near-front",
+          "前寄り"
+        ],
+        [
+          "central",
+          "中央"
+        ],
+        [
+          "near-back",
+          "後ろ寄り"
+        ],
+        [
+          "back",
+          "後ろ"
+        ]
+      ]
+    },
+    "rounding": {
+      "label": "唇の丸め",
+      "options": [
+        [
+          "unrounded",
+          "丸めない"
+        ],
+        [
+          "rounded",
+          "丸める"
+        ],
+        [
+          "lightly-rounded",
+          "軽く丸める"
+        ]
+      ]
+    },
+    "tenseness": {
+      "label": "緊張性",
+      "options": [
+        [
+          "tense",
+          "比較的緊張"
+        ],
+        [
+          "lax",
+          "弛緩"
+        ],
+        [
+          "neutral",
+          "中立"
+        ],
+        [
+          "unspecified",
+          "緊張・弛緩で指定しない"
+        ]
+      ]
+    },
+    "startHeight": {
+      "label": "開始時の舌の高さ",
+      "options": [
+        [
+          "close-mid",
+          "中高"
+        ],
+        [
+          "open-mid",
+          "中低"
+        ],
+        [
+          "low",
+          "低い"
+        ]
+      ]
+    },
+    "startBackness": {
+      "label": "開始時の舌の前後",
+      "options": [
+        [
+          "front",
+          "前"
+        ],
+        [
+          "central",
+          "中央付近"
+        ],
+        [
+          "back",
+          "後ろ"
+        ]
+      ]
+    },
+    "endDirection": {
+      "label": "終了時の舌の方向",
+      "options": [
+        [
+          "ih",
+          "/ɪ/ 方向（前上方）"
+        ],
+        [
+          "uu",
+          "/ʊ/ 方向（後ろ上方）"
+        ]
+      ]
+    },
+    "lipMovement": {
+      "label": "唇の動き",
+      "options": [
+        [
+          "unrounded",
+          "丸めずに移る"
+        ],
+        [
+          "release",
+          "丸めから緩める"
+        ],
+        [
+          "round",
+          "徐々に丸める"
+        ],
+        [
+          "rounded",
+          "丸めたまま狭める"
+        ]
+      ]
+    },
+    "rhoticity": {
+      "label": "Rの響き",
+      "options": [
+        [
+          "rhotic",
+          "Rの響きを伴う"
+        ],
+        [
+          "plain",
+          "Rの響きを伴わない"
+        ]
+      ]
+    },
+    "tongueContact": {
+      "label": "舌先と上あご",
+      "options": [
+        [
+          "no-contact",
+          "舌先を上あごにつけない"
+        ],
+        [
+          "contact",
+          "舌先を上の歯茎につける"
+        ]
+      ]
+    },
+    "stress": {
+      "label": "強勢",
+      "options": [
+        [
+          "stressed",
+          "強勢あり"
+        ],
+        [
+          "unstressed",
+          "強勢なし"
+        ]
+      ]
+    },
+    "place": {
+      "label": "調音位置",
+      "options": [
+        [
+          "bilabial",
+          "両唇"
+        ],
+        [
+          "labiodental",
+          "上の歯と下唇"
+        ],
+        [
+          "dental",
+          "舌先と歯"
+        ],
+        [
+          "alveolar",
+          "歯茎"
+        ],
+        [
+          "postalveolar",
+          "歯茎の少し後ろ"
+        ],
+        [
+          "palatal",
+          "硬口蓋"
+        ],
+        [
+          "velar",
+          "軟口蓋"
+        ],
+        [
+          "glottal",
+          "声門"
+        ],
+        [
+          "labio-velar",
+          "両唇と軟口蓋"
+        ]
+      ]
+    },
+    "manner": {
+      "label": "調音方法",
+      "options": [
+        [
+          "stop",
+          "破裂（閉鎖して開放）"
+        ],
+        [
+          "fricative",
+          "摩擦（隙間に息を通す）"
+        ],
+        [
+          "affricate",
+          "破擦（閉鎖から摩擦）"
+        ],
+        [
+          "nasal",
+          "鼻音（鼻へ息を通す）"
+        ],
+        [
+          "approximant",
+          "接近（閉鎖しない）"
+        ],
+        [
+          "lateral",
+          "側面接近（舌の左右へ）"
+        ]
+      ]
+    },
+    "voicing": {
+      "label": "声帯の振動",
+      "options": [
+        [
+          "voiceless",
+          "無声"
+        ],
+        [
+          "voiced",
+          "有声"
+        ]
+      ]
+    }
+  },
+  "lessons": [
+    {
+      "group": "vowel",
+      "slug": "i",
+      "symbol": "i",
+      "name": "高い前舌母音",
+      "examples": [
+        {
+          "word": "see",
+          "ipa": "si"
+        },
+        {
+          "word": "seat",
+          "ipa": "sit"
+        }
+      ],
+      "features": [
+        "舌：前・高い",
+        "唇：丸めない",
+        "比較的緊張した母音"
+      ],
+      "steps": [
+        "舌の前側を上あごに近づける。",
+        "唇を軽く横に広げ、息を止めず声を出す。"
+      ],
+      "tip": "長さだけで /ɪ/ と区別せず、舌の高さと音色を確かめます。",
+      "comparison": "ih",
+      "aliases": "iː",
+      "structure": {
+        "height": "high",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "tense"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "ih",
+      "symbol": "ɪ",
+      "name": "やや低めの高い前舌母音",
+      "examples": [
+        {
+          "word": "sit",
+          "ipa": "sɪt"
+        },
+        {
+          "word": "fish",
+          "ipa": "fɪʃ"
+        }
+      ],
+      "features": [
+        "舌：前寄り・やや高い",
+        "唇：丸めない",
+        "弛緩母音"
+      ],
+      "steps": [
+        " /i/ より舌を少し下げ、中央に寄せる。",
+        "口の力を抜いて声を出す。"
+      ],
+      "tip": "日本語の「イ」を短くするだけにならないようにします。",
+      "comparison": "i",
+      "aliases": "",
+      "structure": {
+        "height": "near-high",
+        "backness": "near-front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "eh",
+      "symbol": "ɛ",
+      "name": "中低の前舌母音",
+      "examples": [
+        {
+          "word": "bed",
+          "ipa": "bɛd"
+        },
+        {
+          "word": "head",
+          "ipa": "hɛd"
+        }
+      ],
+      "features": [
+        "舌：前・中低",
+        "唇：丸めない",
+        "弛緩母音"
+      ],
+      "steps": [
+        "舌を前に置き、/ɪ/ より口を開く。",
+        "唇を丸めず、舌の位置を保って声を出す。"
+      ],
+      "tip": " /æ/ ほどあごを下げません。辞書では /e/ と書く場合もあります。",
+      "comparison": "ae",
+      "aliases": "e（辞書による）",
+      "structure": {
+        "height": "open-mid",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "ae",
+      "symbol": "æ",
+      "name": "低い前舌母音",
+      "examples": [
+        {
+          "word": "cat",
+          "ipa": "kæt"
+        },
+        {
+          "word": "cap",
+          "ipa": "kæp"
+        }
+      ],
+      "features": [
+        "舌：前・低い",
+        "唇：丸めない",
+        "大きめの開口"
+      ],
+      "steps": [
+        "舌を前方の低い位置に置く。",
+        "あごを下げ、唇を丸めず声を出す。"
+      ],
+      "tip": " /ʌ/ より舌を前に置きます。鼻音の前などでは音色が変わることがあります。",
+      "comparison": "uh",
+      "aliases": "",
+      "structure": {
+        "height": "low",
+        "backness": "front",
+        "rounding": "unrounded",
+        "tenseness": "lax"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "ah",
+      "symbol": "ɑ",
+      "name": "低い後舌母音",
+      "examples": [
+        {
+          "word": "hot",
+          "ipa": "hɑt"
+        },
+        {
+          "word": "father",
+          "ipa": "ˈfɑðɚ"
+        }
+      ],
+      "features": [
+        "舌：後ろ・低い",
+        "唇：丸めない",
+        "大きい開口"
+      ],
+      "steps": [
+        "あごを下げて口を大きく開く。",
+        "舌を低く後ろ寄りに置き、唇を丸めず発音する。"
+      ],
+      "tip": " /æ/ と口の開きだけでなく、舌の前後も比べます。",
+      "comparison": "ae",
+      "aliases": "ɑː",
+      "structure": {
+        "height": "low",
+        "backness": "back",
+        "rounding": "unrounded",
+        "tenseness": "unspecified"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "aw",
+      "symbol": "ɔ",
+      "name": "中低の後舌母音",
+      "examples": [
+        {
+          "word": "thought",
+          "ipa": "θɔt"
+        },
+        {
+          "word": "law",
+          "ipa": "lɔ"
+        }
+      ],
+      "features": [
+        "舌：後ろ・中低",
+        "唇：丸める",
+        "/ɑ/ との区別に地域差"
+      ],
+      "steps": [
+        "舌を後ろ寄りに置く。",
+        " /ɑ/ より少し口を狭め、唇を丸めて発音する。"
+      ],
+      "tip": "cot–caught merger のある話者は /ɑ/ と /ɔ/ を区別しません。どちらもアメリカ英語の発音です。",
+      "comparison": "ah",
+      "aliases": "ɔː",
+      "structure": {
+        "height": "open-mid",
+        "backness": "back",
+        "rounding": "rounded",
+        "tenseness": "unspecified"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "uu",
+      "symbol": "ʊ",
+      "name": "やや低めの高い後舌母音",
+      "examples": [
+        {
+          "word": "book",
+          "ipa": "bʊk"
+        },
+        {
+          "word": "foot",
+          "ipa": "fʊt"
+        }
+      ],
+      "features": [
+        "舌：後ろ寄り・やや高い",
+        "唇：軽く丸める",
+        "弛緩母音"
+      ],
+      "steps": [
+        "舌を後ろ寄りに持ち上げる。",
+        " /u/ より舌を下げ、唇の緊張を弱めて声を出す。"
+      ],
+      "tip": " /u/ を短くするだけでなく、口の力を抜いて音色を変えます。",
+      "comparison": "u",
+      "aliases": "",
+      "structure": {
+        "height": "near-high",
+        "backness": "near-back",
+        "rounding": "lightly-rounded",
+        "tenseness": "lax"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "u",
+      "symbol": "u",
+      "name": "高い後舌母音",
+      "examples": [
+        {
+          "word": "food",
+          "ipa": "fud"
+        },
+        {
+          "word": "blue",
+          "ipa": "blu"
+        }
+      ],
+      "features": [
+        "舌：高い・後ろ寄り",
+        "唇：丸める",
+        "比較的緊張した母音"
+      ],
+      "steps": [
+        "舌を高くし、唇を丸める。",
+        "息を止めず、一定の声を出す。"
+      ],
+      "tip": "日本語の「ウ」より唇の丸めを意識します。アメリカ英語では舌が中央寄りになる話者もいます。",
+      "comparison": "uu",
+      "aliases": "uː",
+      "structure": {
+        "height": "high",
+        "backness": "near-back",
+        "rounding": "rounded",
+        "tenseness": "tense"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "uh",
+      "symbol": "ʌ",
+      "name": "強勢のある中舌母音",
+      "examples": [
+        {
+          "word": "cup",
+          "ipa": "kʌp"
+        },
+        {
+          "word": "love",
+          "ipa": "lʌv"
+        }
+      ],
+      "features": [
+        "舌：中央・中低",
+        "唇：丸めない",
+        "強勢のある音節"
+      ],
+      "steps": [
+        "舌を中央付近に置く。",
+        "口を適度に開き、力みすぎず声を出す。"
+      ],
+      "tip": " /ə/ と似た音色でも、/ʌ/ は強勢のある音節で使います。",
+      "comparison": "schwa",
+      "aliases": "",
+      "structure": {
+        "height": "open-mid",
+        "backness": "central",
+        "rounding": "unrounded",
+        "tenseness": "lax",
+        "stress": "stressed"
+      }
+    },
+    {
+      "group": "vowel",
+      "slug": "schwa",
+      "symbol": "ə",
+      "name": "シュワー（弱母音）",
+      "examples": [
+        {
+          "word": "about",
+          "ipa": "əˈbaʊt"
+        },
+        {
+          "word": "sofa",
+          "ipa": "ˈsoʊfə"
+        }
+      ],
+      "features": [
+        "舌：中央付近",
+        "唇：自然な形",
+        "強勢のない音節"
+      ],
+      "steps": [
+        "口と舌を楽な位置にする。",
+        "強く押し出さず、弱く短めに声を出す。"
+      ],
+      "tip": "つづりの母音字を一つずつはっきり読まず、強勢のない部分を弱めます。",
+      "comparison": "uh",
+      "aliases": "",
+      "structure": {
+        "height": "mid",
+        "backness": "central",
+        "rounding": "unrounded",
+        "tenseness": "neutral",
+        "stress": "unstressed"
+      }
+    },
+    {
+      "group": "diphthong",
+      "slug": "ay",
+      "symbol": "eɪ",
+      "name": "前から高い位置へ移る母音",
+      "examples": [
+        {
+          "word": "day",
+          "ipa": "deɪ"
+        },
+        {
+          "word": "face",
+          "ipa": "feɪs"
+        }
+      ],
+      "features": [
+        "開始：前・中高",
+        "終了：/ɪ/ 方向",
+        "唇：丸めない"
+      ],
+      "steps": [
+        "舌を前の中高の位置に置いて声を出す。",
+        "声をつなげたまま舌を /ɪ/ の方向へ上げる。"
+      ],
+      "tip": "日本語の「エ・イ」のように2つの音節に分けません。",
+      "comparison": "eh",
+      "aliases": "",
+      "structure": {
+        "startHeight": "close-mid",
+        "startBackness": "front",
+        "endDirection": "ih",
+        "lipMovement": "unrounded"
+      }
+    },
+    {
+      "group": "diphthong",
+      "slug": "eye",
+      "symbol": "aɪ",
+      "name": "開いた位置から前上方へ移る母音",
+      "examples": [
+        {
+          "word": "my",
+          "ipa": "maɪ"
+        },
+        {
+          "word": "price",
+          "ipa": "praɪs"
+        }
+      ],
+      "features": [
+        "開始：低い位置",
+        "終了：/ɪ/ 方向",
+        "唇：丸めない"
+      ],
+      "steps": [
+        "口を大きく開いて声を出す。",
+        "あごを上げながら舌を前上方へ動かす。"
+      ],
+      "tip": "終わりを独立した「イ」にせず、1つの音節にまとめます。",
+      "comparison": "ay",
+      "aliases": "",
+      "structure": {
+        "startHeight": "low",
+        "startBackness": "central",
+        "endDirection": "ih",
+        "lipMovement": "unrounded"
+      }
+    },
+    {
+      "group": "diphthong",
+      "slug": "oy",
+      "symbol": "ɔɪ",
+      "name": "丸い唇から前上方へ移る母音",
+      "examples": [
+        {
+          "word": "boy",
+          "ipa": "bɔɪ"
+        },
+        {
+          "word": "choice",
+          "ipa": "tʃɔɪs"
+        }
+      ],
+      "features": [
+        "開始：後ろ・中低",
+        "終了：/ɪ/ 方向",
+        "唇：丸めから緩めへ"
+      ],
+      "steps": [
+        "唇を丸め、/ɔ/ に近い位置から声を出す。",
+        "唇を緩めながら舌を前上方へ動かす。"
+      ],
+      "tip": "始めから唇を横に広げず、開始と終了の形の違いを意識します。",
+      "comparison": "eye",
+      "aliases": "",
+      "structure": {
+        "startHeight": "open-mid",
+        "startBackness": "back",
+        "endDirection": "ih",
+        "lipMovement": "release"
+      }
+    },
+    {
+      "group": "diphthong",
+      "slug": "ow",
+      "symbol": "aʊ",
+      "name": "開いた位置から後ろ上方へ移る母音",
+      "examples": [
+        {
+          "word": "now",
+          "ipa": "naʊ"
+        },
+        {
+          "word": "mouth",
+          "ipa": "maʊθ"
+        }
+      ],
+      "features": [
+        "開始：低い位置",
+        "終了：/ʊ/ 方向",
+        "唇：徐々に丸める"
+      ],
+      "steps": [
+        "口を開いて声を出す。",
+        "舌を後ろ上方へ動かしながら唇を丸める。"
+      ],
+      "tip": "途中で声を切らず、口の動きを1つにつなげます。",
+      "comparison": "oh",
+      "aliases": "",
+      "structure": {
+        "startHeight": "low",
+        "startBackness": "central",
+        "endDirection": "uu",
+        "lipMovement": "round"
+      }
+    },
+    {
+      "group": "diphthong",
+      "slug": "oh",
+      "symbol": "oʊ",
+      "name": "後ろから高い位置へ移る母音",
+      "examples": [
+        {
+          "word": "go",
+          "ipa": "goʊ"
+        },
+        {
+          "word": "home",
+          "ipa": "hoʊm"
+        }
+      ],
+      "features": [
+        "開始：後ろ・中高",
+        "終了：/ʊ/ 方向",
+        "唇：丸める"
+      ],
+      "steps": [
+        "舌を後ろの中高に置き、唇を丸める。",
+        "声をつなげながら舌を少し上げ、口を狭める。"
+      ],
+      "tip": "日本語の「オー」のように口を固定しないようにします。",
+      "comparison": "ow",
+      "aliases": "o（辞書による）",
+      "structure": {
+        "startHeight": "close-mid",
+        "startBackness": "back",
+        "endDirection": "uu",
+        "lipMovement": "rounded"
+      }
+    },
+    {
+      "group": "rhotic",
+      "slug": "er-stressed",
+      "symbol": "ɝ",
+      "name": "強勢のあるR音性母音",
+      "examples": [
+        {
+          "word": "bird",
+          "ipa": "bɝd"
+        },
+        {
+          "word": "nurse",
+          "ipa": "nɝs"
+        }
+      ],
+      "features": [
+        "舌：中央付近からRの形",
+        "唇：軽く丸めてもよい",
+        "強勢あり"
+      ],
+      "steps": [
+        "舌先を上あごにつけず、舌を後ろに寄せるか舌の中央を盛り上げる。",
+        "舌の両側を上の奥歯付近に寄せ、Rの響きのある声を出す。"
+      ],
+      "tip": "母音の後に日本語の「ル」を足すのではなく、母音全体にRの響きを持たせます。",
+      "comparison": "er-unstressed",
+      "aliases": "ɜr / ɜːr（辞書による）",
+      "structure": {
+        "rhoticity": "rhotic",
+        "tongueContact": "no-contact",
+        "stress": "stressed"
+      }
+    },
+    {
+      "group": "rhotic",
+      "slug": "er-unstressed",
+      "symbol": "ɚ",
+      "name": "強勢のないR音性母音",
+      "examples": [
+        {
+          "word": "teacher",
+          "ipa": "ˈtitʃɚ"
+        },
+        {
+          "word": "better",
+          "ipa": "ˈbɛtɚ"
+        }
+      ],
+      "features": [
+        "舌：Rの形",
+        "唇：力を抜く",
+        "強勢なし"
+      ],
+      "steps": [
+        " /ɝ/ と同じように舌を上あごにつけずRの形にする。",
+        "強勢のある部分より弱く短めに発音する。"
+      ],
+      "tip": "語末でもRの響きを保ちます。better の /t/ は実際の会話では [ɾ] になることがあります。",
+      "comparison": "er-stressed",
+      "aliases": "ər",
+      "structure": {
+        "rhoticity": "rhotic",
+        "tongueContact": "no-contact",
+        "stress": "unstressed"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "p",
+      "symbol": "p",
+      "name": "無声両唇破裂音",
+      "examples": [
+        {
+          "word": "pen",
+          "ipa": "pɛn"
+        },
+        {
+          "word": "map",
+          "ipa": "mæp"
+        }
+      ],
+      "features": [
+        "場所：両唇",
+        "方法：閉鎖して開放",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "両唇を閉じ、息をいったん止める。",
+        "唇を開いて息を出す。"
+      ],
+      "tip": "語末に「プ」の母音を足しません。強勢のある音節の先頭では息が強く出ます。",
+      "comparison": "b",
+      "aliases": "",
+      "structure": {
+        "place": "bilabial",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "b",
+      "symbol": "b",
+      "name": "有声両唇破裂音",
+      "examples": [
+        {
+          "word": "bed",
+          "ipa": "bɛd"
+        },
+        {
+          "word": "cab",
+          "ipa": "kæb"
+        }
+      ],
+      "features": [
+        "場所：両唇",
+        "方法：閉鎖して開放",
+        "声帯：有声"
+      ],
+      "steps": [
+        "両唇を閉じて息を止める。",
+        "声を伴わせて唇を開く。"
+      ],
+      "tip": " /p/ と同じ口の位置です。語末に「ブ」の母音を足しません。",
+      "comparison": "p",
+      "aliases": "",
+      "structure": {
+        "place": "bilabial",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "t",
+      "symbol": "t",
+      "name": "無声歯茎破裂音",
+      "examples": [
+        {
+          "word": "top",
+          "ipa": "tɑp"
+        },
+        {
+          "word": "cat",
+          "ipa": "kæt"
+        }
+      ],
+      "features": [
+        "場所：上の歯茎",
+        "方法：閉鎖して開放",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "舌先を上の前歯のすぐ後ろの歯茎につける。",
+        "舌を離して息を出す。"
+      ],
+      "tip": "母音の間などでは [ɾ] になることがあります。まずは基本の閉鎖と開放を学びます。",
+      "comparison": "d",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "d",
+      "symbol": "d",
+      "name": "有声歯茎破裂音",
+      "examples": [
+        {
+          "word": "day",
+          "ipa": "deɪ"
+        },
+        {
+          "word": "sad",
+          "ipa": "sæd"
+        }
+      ],
+      "features": [
+        "場所：上の歯茎",
+        "方法：閉鎖して開放",
+        "声帯：有声"
+      ],
+      "steps": [
+        "舌先を上の歯茎につけて息を止める。",
+        "声を伴わせて舌を離す。"
+      ],
+      "tip": "語末に「ド」の母音を足しません。/t/ と同じように [ɾ] になる環境もあります。",
+      "comparison": "t",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "k",
+      "symbol": "k",
+      "name": "無声軟口蓋破裂音",
+      "examples": [
+        {
+          "word": "key",
+          "ipa": "ki"
+        },
+        {
+          "word": "back",
+          "ipa": "bæk"
+        }
+      ],
+      "features": [
+        "場所：舌の奥と軟口蓋",
+        "方法：閉鎖して開放",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "舌の奥を上あごの奥につける。",
+        "舌を離し、息を出す。"
+      ],
+      "tip": "舌先ではなく舌の奥で息を止めます。語末に母音を足しません。",
+      "comparison": "g",
+      "aliases": "",
+      "structure": {
+        "place": "velar",
+        "manner": "stop",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "g",
+      "symbol": "g",
+      "name": "有声軟口蓋破裂音",
+      "examples": [
+        {
+          "word": "go",
+          "ipa": "goʊ"
+        },
+        {
+          "word": "bag",
+          "ipa": "bæg"
+        }
+      ],
+      "features": [
+        "場所：舌の奥と軟口蓋",
+        "方法：閉鎖して開放",
+        "声帯：有声"
+      ],
+      "steps": [
+        "舌の奥を上あごの奥につける。",
+        "声を伴わせながら閉鎖を開く。"
+      ],
+      "tip": " /ŋ/ のように鼻へ息を流し続けず、口の閉鎖を開きます。",
+      "comparison": "k",
+      "aliases": "ɡ（字体の違い）",
+      "structure": {
+        "place": "velar",
+        "manner": "stop",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "f",
+      "symbol": "f",
+      "name": "無声唇歯摩擦音",
+      "examples": [
+        {
+          "word": "fine",
+          "ipa": "faɪn"
+        },
+        {
+          "word": "leaf",
+          "ipa": "lif"
+        }
+      ],
+      "features": [
+        "場所：上の歯と下唇",
+        "方法：狭い隙間を通す",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "上の前歯を下唇に軽く当てる。",
+        "隙間から息を流し続ける。"
+      ],
+      "tip": "日本語の「フ」のように両唇だけで作らないようにします。",
+      "comparison": "v",
+      "aliases": "",
+      "structure": {
+        "place": "labiodental",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "v",
+      "symbol": "v",
+      "name": "有声唇歯摩擦音",
+      "examples": [
+        {
+          "word": "very",
+          "ipa": "ˈvɛri"
+        },
+        {
+          "word": "leave",
+          "ipa": "liv"
+        }
+      ],
+      "features": [
+        "場所：上の歯と下唇",
+        "方法：狭い隙間を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "上の前歯を下唇に軽く当てる。",
+        "声を出しながら隙間へ息を流す。"
+      ],
+      "tip": " /b/ と違い、両唇を完全には閉じません。",
+      "comparison": "f",
+      "aliases": "",
+      "structure": {
+        "place": "labiodental",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "th",
+      "symbol": "θ",
+      "name": "無声歯摩擦音",
+      "examples": [
+        {
+          "word": "think",
+          "ipa": "θɪŋk"
+        },
+        {
+          "word": "bath",
+          "ipa": "bæθ"
+        }
+      ],
+      "features": [
+        "場所：舌先と歯",
+        "方法：狭い隙間を通す",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "舌先を上の前歯に軽く当てるか、歯の間に少し出す。",
+        "舌と歯の隙間から息を流す。"
+      ],
+      "tip": " /s/ のように舌を歯茎へ引き込まず、舌先と歯の位置を確かめます。",
+      "comparison": "dh",
+      "aliases": "",
+      "structure": {
+        "place": "dental",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "dh",
+      "symbol": "ð",
+      "name": "有声歯摩擦音",
+      "examples": [
+        {
+          "word": "this",
+          "ipa": "ðɪs"
+        },
+        {
+          "word": "mother",
+          "ipa": "ˈmʌðɚ"
+        }
+      ],
+      "features": [
+        "場所：舌先と歯",
+        "方法：狭い隙間を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        " /θ/ と同じ位置に舌を置く。",
+        "声帯を振動させながら隙間へ息を流す。"
+      ],
+      "tip": " /d/ のように息を完全に止めず、/z/ より舌先を前に置きます。",
+      "comparison": "th",
+      "aliases": "",
+      "structure": {
+        "place": "dental",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "s",
+      "symbol": "s",
+      "name": "無声歯茎摩擦音",
+      "examples": [
+        {
+          "word": "see",
+          "ipa": "si"
+        },
+        {
+          "word": "bus",
+          "ipa": "bʌs"
+        }
+      ],
+      "features": [
+        "場所：歯茎付近",
+        "方法：摩擦",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "舌先付近を上の歯茎に近づける。",
+        "中央の狭い通り道から息を流す。"
+      ],
+      "tip": " /ʃ/ より舌を前に置き、唇を丸めすぎません。",
+      "comparison": "z",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "z",
+      "symbol": "z",
+      "name": "有声歯茎摩擦音",
+      "examples": [
+        {
+          "word": "zoo",
+          "ipa": "zu"
+        },
+        {
+          "word": "rose",
+          "ipa": "roʊz"
+        }
+      ],
+      "features": [
+        "場所：歯茎付近",
+        "方法：摩擦",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        " /s/ の位置で舌を構える。",
+        "声を出しながら息を流し続ける。"
+      ],
+      "tip": "日本語の語頭の「ズ」のように、最初に息を完全に止めないようにします。",
+      "comparison": "s",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "sh",
+      "symbol": "ʃ",
+      "name": "無声後部歯茎摩擦音",
+      "examples": [
+        {
+          "word": "she",
+          "ipa": "ʃi"
+        },
+        {
+          "word": "fish",
+          "ipa": "fɪʃ"
+        }
+      ],
+      "features": [
+        "場所：歯茎の少し後ろ",
+        "方法：摩擦",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        " /s/ より舌を少し後ろに引く。",
+        "唇を軽く丸め、広めの隙間から息を流す。"
+      ],
+      "tip": "語末でも「シ」の母音を加えません。",
+      "comparison": "zh",
+      "aliases": "",
+      "structure": {
+        "place": "postalveolar",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "zh",
+      "symbol": "ʒ",
+      "name": "有声後部歯茎摩擦音",
+      "examples": [
+        {
+          "word": "vision",
+          "ipa": "ˈvɪʒən"
+        },
+        {
+          "word": "measure",
+          "ipa": "ˈmɛʒɚ"
+        }
+      ],
+      "features": [
+        "場所：歯茎の少し後ろ",
+        "方法：摩擦",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        " /ʃ/ と同じ位置に舌を置く。",
+        "声帯を振動させながら息を流す。"
+      ],
+      "tip": " /dʒ/ と違い、最初に閉鎖を作りません。",
+      "comparison": "sh",
+      "aliases": "",
+      "structure": {
+        "place": "postalveolar",
+        "manner": "fricative",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "h",
+      "symbol": "h",
+      "name": "無声声門摩擦音",
+      "examples": [
+        {
+          "word": "hat",
+          "ipa": "hæt"
+        },
+        {
+          "word": "ahead",
+          "ipa": "əˈhɛd"
+        }
+      ],
+      "features": [
+        "場所：声門",
+        "方法：息を通す",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "次の母音の口の形を準備する。",
+        "喉を締めすぎず、息を出して母音へつなげる。"
+      ],
+      "tip": "日本語の「ヒ」のように舌と上あごの間を強く狭めないようにします。",
+      "comparison": "f",
+      "aliases": "",
+      "structure": {
+        "place": "glottal",
+        "manner": "fricative",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "ch",
+      "symbol": "tʃ",
+      "name": "無声後部歯茎破擦音",
+      "examples": [
+        {
+          "word": "chair",
+          "ipa": "tʃɛr"
+        },
+        {
+          "word": "watch",
+          "ipa": "wɑtʃ"
+        }
+      ],
+      "features": [
+        "場所：歯茎の少し後ろ",
+        "方法：閉鎖から摩擦",
+        "声帯：振動なし"
+      ],
+      "steps": [
+        "舌で歯茎の後ろ付近に閉鎖を作る。",
+        "閉鎖を緩め、/ʃ/ のような摩擦へつなげる。"
+      ],
+      "tip": " /ʃ/ との違いは最初の閉鎖です。2つの別々の音節にしません。",
+      "comparison": "jh",
+      "aliases": "",
+      "structure": {
+        "place": "postalveolar",
+        "manner": "affricate",
+        "voicing": "voiceless"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "jh",
+      "symbol": "dʒ",
+      "name": "有声後部歯茎破擦音",
+      "examples": [
+        {
+          "word": "job",
+          "ipa": "dʒɑb"
+        },
+        {
+          "word": "age",
+          "ipa": "eɪdʒ"
+        }
+      ],
+      "features": [
+        "場所：歯茎の少し後ろ",
+        "方法：閉鎖から摩擦",
+        "声帯：有声"
+      ],
+      "steps": [
+        " /tʃ/ と同じ位置に閉鎖を作る。",
+        "声を伴わせながら閉鎖を摩擦へ変える。"
+      ],
+      "tip": " /ʒ/ と比べて、最初に息を止める部分があることを確かめます。",
+      "comparison": "ch",
+      "aliases": "",
+      "structure": {
+        "place": "postalveolar",
+        "manner": "affricate",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "m",
+      "symbol": "m",
+      "name": "両唇鼻音",
+      "examples": [
+        {
+          "word": "moon",
+          "ipa": "mun"
+        },
+        {
+          "word": "sum",
+          "ipa": "sʌm"
+        }
+      ],
+      "features": [
+        "場所：両唇",
+        "方法：鼻へ息を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "両唇を閉じる。",
+        "唇を閉じたまま鼻へ息を通して声を出す。"
+      ],
+      "tip": "語末でも唇を閉じます。日本語の「ン」だけで置き換えないようにします。",
+      "comparison": "n",
+      "aliases": "",
+      "structure": {
+        "place": "bilabial",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "n",
+      "symbol": "n",
+      "name": "歯茎鼻音",
+      "examples": [
+        {
+          "word": "no",
+          "ipa": "noʊ"
+        },
+        {
+          "word": "sun",
+          "ipa": "sʌn"
+        }
+      ],
+      "features": [
+        "場所：上の歯茎",
+        "方法：鼻へ息を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "舌先を上の歯茎につける。",
+        "その位置を保ちながら鼻へ息を通す。"
+      ],
+      "tip": " /m/ と違い唇を閉じず、舌先で口の通路を塞ぎます。",
+      "comparison": "ng",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "ng",
+      "symbol": "ŋ",
+      "name": "軟口蓋鼻音",
+      "examples": [
+        {
+          "word": "sing",
+          "ipa": "sɪŋ"
+        },
+        {
+          "word": "long",
+          "ipa": "lɔŋ"
+        }
+      ],
+      "features": [
+        "場所：舌の奥と軟口蓋",
+        "方法：鼻へ息を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "舌の奥を上あごの奥につける。",
+        "口の閉鎖を保ち、鼻へ息を通して声を出す。"
+      ],
+      "tip": "sing の最後に /g/ を足しません。finger など、/ŋg/ を含む別の語もあります。",
+      "comparison": "n",
+      "aliases": "",
+      "structure": {
+        "place": "velar",
+        "manner": "nasal",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "l",
+      "symbol": "l",
+      "name": "歯茎側面接近音",
+      "examples": [
+        {
+          "word": "light",
+          "ipa": "laɪt"
+        },
+        {
+          "word": "feel",
+          "ipa": "fil"
+        }
+      ],
+      "features": [
+        "場所：上の歯茎",
+        "方法：舌の側面へ息を通す",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "舌先を上の歯茎につける。",
+        "舌の左右から息を通しながら声を出す。"
+      ],
+      "tip": "語末などでは舌の奥も持ち上がり、暗いL [ɫ] になりやすくなります。",
+      "comparison": "r",
+      "aliases": "",
+      "structure": {
+        "place": "alveolar",
+        "manner": "lateral",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "r",
+      "symbol": "r",
+      "name": "Rの接近音",
+      "examples": [
+        {
+          "word": "red",
+          "ipa": "rɛd"
+        },
+        {
+          "word": "right",
+          "ipa": "raɪt"
+        }
+      ],
+      "features": [
+        "場所：歯茎後方付近",
+        "方法：接近（閉鎖なし）",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "舌先を上あごにつけず、舌を後ろに寄せるか中央を盛り上げる。",
+        "舌の両側を上の奥歯付近に寄せ、声を出す。"
+      ],
+      "tip": "日本語のラ行のように舌先を打ちつけません。英語の /r/ は通常、IPAでは [ɹ] に相当する接近音です。",
+      "comparison": "l",
+      "aliases": "ɹ（詳しい音声表記）",
+      "structure": {
+        "place": "postalveolar",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "y",
+      "symbol": "j",
+      "name": "硬口蓋接近音",
+      "examples": [
+        {
+          "word": "yes",
+          "ipa": "jɛs"
+        },
+        {
+          "word": "you",
+          "ipa": "ju"
+        }
+      ],
+      "features": [
+        "場所：舌と硬口蓋",
+        "方法：接近",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "舌の前側を /i/ に近い高い位置に置く。",
+        "そこから次の母音へすぐに移る。"
+      ],
+      "tip": "文字の j の読みではありません。/dʒ/ のような閉鎖や摩擦を作りません。",
+      "comparison": "jh",
+      "aliases": "",
+      "structure": {
+        "place": "palatal",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    },
+    {
+      "group": "consonant",
+      "slug": "w",
+      "symbol": "w",
+      "name": "両唇軟口蓋接近音",
+      "examples": [
+        {
+          "word": "we",
+          "ipa": "wi"
+        },
+        {
+          "word": "wet",
+          "ipa": "wɛt"
+        }
+      ],
+      "features": [
+        "場所：両唇と舌の奥",
+        "方法：接近",
+        "声帯：振動あり"
+      ],
+      "steps": [
+        "唇を丸め、舌の奥を持ち上げる。",
+        "声を出しながら、次の母音へ素早く開く。"
+      ],
+      "tip": "独立した「ウ」を前に付けず、母音への動きとして発音します。",
+      "comparison": "v",
+      "aliases": "",
+      "structure": {
+        "place": "labio-velar",
+        "manner": "approximant",
+        "voicing": "voiced"
+      }
+    }
+  ]
+}

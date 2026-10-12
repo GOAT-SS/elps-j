@@ -1,7 +1,10 @@
 import Link from "next/link";
 import ComponentBuilder from "./ComponentBuilder";
+import { soundLessons } from "../data/american-english";
 
-export default function ComponentsPage() {
+export default async function ComponentsPage({ searchParams }: { searchParams: Promise<{ sound?: string | string[] }> }) {
+  const requested = (await searchParams).sound;
+  const initialSoundSlug = typeof requested === 'string' && soundLessons.some(sound => sound.slug === requested) ? requested : soundLessons[0].slug;
   return (
     <main className="flex-1">
       <section className="border-b border-emerald-100 bg-emerald-50">
@@ -23,7 +26,7 @@ export default function ComponentsPage() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8">
-        <ComponentBuilder />
+        <ComponentBuilder key={initialSoundSlug} initialSoundSlug={initialSoundSlug} />
 
         <aside className="mt-8 grid gap-5 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 3,
+  "soundSlug": "ae",
+  "targetSound": "æ",
+  "targetWord": "cap",
+  "expectedIPA": "kæp",
+  "observedIPA": "kʌp",
+  "observedSound": "ʌ",
+  "canEvaluate": true,
+  "evaluationStatus": "sound_mismatch",
+  "message": "発音した音は /ʌ/ と推定されました。共通する要素を維持し、異なる要素を目標 /æ/ に近づけてみましょう。",
+  "soundCandidateScores": [
+    {
+      "sound": "i",
+      "candidateIPA": "kip",
+      "slug": "i",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ɪ",
+      "candidateIPA": "kɪp",
+      "slug": "ih",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ɛ",
+      "candidateIPA": "kɛp",
+      "slug": "eh",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "æ",
+      "candidateIPA": "kæp",
+      "slug": "ae",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ɑ",
+      "candidateIPA": "kɑp",
+      "slug": "ah",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ɔ",
+      "candidateIPA": "kɔp",
+      "slug": "aw",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ʊ",
+      "candidateIPA": "kʊp",
+      "slug": "uu",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "u",
+      "candidateIPA": "kup",
+      "slug": "u",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ʌ",
+      "candidateIPA": "kʌp",
+      "slug": "uh",
+      "relativeScorePercent": 95
+    },
+    {
+      "sound": "ə",
+      "candidateIPA": "kəp",
+      "slug": "schwa",
+      "relativeScorePercent": 0.1
+    }
+  ],
+  "bestCandidateSound": "ʌ",
+  "scoreMargin": 94.9,
+  "scoreMarginThreshold": 15,
+  "scoreMarginThresholdStatus": "provisional",
+  "scoreConfidenceStatus": "clear",
+  "scoreMeaning": "同じ種類の候補内相対スコアであり、正解確率ではありません。判定基準は暫定です。",
+  "feedbackBasis": "inferred_phoneme",
+  "soundComponentAnalysis": [
+    {
+      "component": "height",
+      "target": "low",
+      "inferred": "open-mid",
+      "matches": false
+    },
+    {
+      "component": "backness",
+      "target": "front",
+      "inferred": "central",
+      "matches": false
+    },
+    {
+      "component": "rounding",
+      "target": "unrounded",
+      "inferred": "unrounded",
+      "matches": true
+    },
+    {
+      "component": "tenseness",
+      "target": "lax",
+      "inferred": "lax",
+      "matches": true
+    }
+  ]
+}

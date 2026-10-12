@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 3,
+  "soundSlug": "h",
+  "targetSound": "h",
+  "targetWord": "hat",
+  "expectedIPA": "hæt",
+  "observedIPA": "hæt",
+  "observedSound": "h",
+  "canEvaluate": true,
+  "evaluationStatus": "matched",
+  "message": "推定音は目標の音と一致しました。共通する構成要素を意識して、もう一度発音してみましょう。",
+  "soundCandidateScores": [
+    {
+      "sound": "p",
+      "candidateIPA": "pæt",
+      "slug": "p",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "b",
+      "candidateIPA": "bæt",
+      "slug": "b",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "t",
+      "candidateIPA": "tæt",
+      "slug": "t",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "d",
+      "candidateIPA": "dæt",
+      "slug": "d",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "k",
+      "candidateIPA": "kæt",
+      "slug": "k",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "g",
+      "candidateIPA": "gæt",
+      "slug": "g",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "f",
+      "candidateIPA": "fæt",
+      "slug": "f",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "v",
+      "candidateIPA": "væt",
+      "slug": "v",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "θ",
+      "candidateIPA": "θæt",
+      "slug": "th",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ð",
+      "candidateIPA": "ðæt",
+      "slug": "dh",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "s",
+      "candidateIPA": "sæt",
+      "slug": "s",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "z",
+      "candidateIPA": "zæt",
+      "slug": "z",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ʃ",
+      "candidateIPA": "ʃæt",
+      "slug": "sh",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ʒ",
+      "candidateIPA": "ʒæt",
+      "slug": "zh",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "h",
+      "candidateIPA": "hæt",
+      "slug": "h",
+      "relativeScorePercent": 95
+    },
+    {
+      "sound": "tʃ",
+      "candidateIPA": "tʃæt",
+      "slug": "ch",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "dʒ",
+      "candidateIPA": "dʒæt",
+      "slug": "jh",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "m",
+      "candidateIPA": "mæt",
+      "slug": "m",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "n",
+      "candidateIPA": "næt",
+      "slug": "n",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "ŋ",
+      "candidateIPA": "ŋæt",
+      "slug": "ng",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "l",
+      "candidateIPA": "læt",
+      "slug": "l",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "r",
+      "candidateIPA": "ræt",
+      "slug": "r",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "j",
+      "candidateIPA": "jæt",
+      "slug": "y",
+      "relativeScorePercent": 0.1
+    },
+    {
+      "sound": "w",
+      "candidateIPA": "wæt",
+      "slug": "w",
+      "relativeScorePercent": 0.1
+    }
+  ],
+  "bestCandidateSound": "h",
+  "scoreMargin": 94.9,
+  "scoreMarginThreshold": 15,
+  "scoreMarginThresholdStatus": "provisional",
+  "scoreConfidenceStatus": "clear",
+  "scoreMeaning": "同じ種類の候補内相対スコアであり、正解確率ではありません。判定基準は暫定です。",
+  "feedbackBasis": "inferred_phoneme",
+  "soundComponentAnalysis": [
+    {
+      "component": "place",
+      "target": "glottal",
+      "inferred": "glottal",
+      "matches": true
+    },
+    {
+      "component": "manner",
+      "target": "fricative",
+      "inferred": "fricative",
+      "matches": true
+    },
+    {
+      "component": "voicing",
+      "target": "voiceless",
+      "inferred": "voiceless",
+      "matches": true
+    }
+  ]
+}

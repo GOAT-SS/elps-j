@@ -1,3 +1,4 @@
 # The pronunciation model runs on the persistent FastAPI host, not Vercel.
 backend/
 tmp/
+.env*

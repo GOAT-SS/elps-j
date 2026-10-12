@@ -8,6 +8,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 
+import { featureDefinitions } from "../data/american-english";
+
 export const pronunciationComponentDefinitions = [
   {
     key: "symbol",
@@ -41,11 +43,7 @@ export const pronunciationComponentDefinitions = [
   {
     key: "height",
     label: "舌の高さ",
-    options: [
-      ["high", "高い"],
-      ["mid", "中間"],
-      ["low", "低い"],
-    ],
+    options: featureDefinitions.height.options.map(([value, label]) => [value, label] as const),
   },
   {
     key: "backness",

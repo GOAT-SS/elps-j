@@ -33,7 +33,8 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-700">
             41の発音項目から記号と例語を選び、録音して発音を確認します。
-            単母音、二重母音、R音性母音、子音を練習できます。
+            推定音と目標音を、知識学習・構成理解で学んだ構成要素で比べます。
+            維持する要素と変更する要素を確認し、発音の修正と録音を繰り返しましょう。
           </p>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
             音声AIが返す音素列は学習の手がかりです。
@@ -43,7 +44,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
-        <Recorder initialSoundSlug={initialSoundSlug} />
+        <Recorder key={initialSoundSlug ?? 'default'} initialSoundSlug={initialSoundSlug} />
       </section>
     </main>
   )

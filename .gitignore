@@ -50,3 +50,6 @@ __pycache__/
 # Uploaded and converted audio
 *.webm
 *.wav
+
+# Local production service logs
+/tmp/
